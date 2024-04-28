@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tasklist?currentSchema=tasklist
+    username: postgres
+    password: Strekoza84
+    driver-class-name: org.postgresql.Driver
+server:
+  port: 9001
