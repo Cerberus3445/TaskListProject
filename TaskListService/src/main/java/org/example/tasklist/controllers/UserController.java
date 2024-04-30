@@ -37,7 +37,7 @@ public class UserController {
         return modelMapper.map(user, UserDto.class);
     }
 
-    @PatchMapping("/{id}/update")
+    @PostMapping("/{id}/update")
     @Operation(summary = "Update user")
     public UserDto updateUser(@PathVariable("id") int id, @RequestBody UserDto userDto){
         User user = modelMapper.map(userDto, User.class);

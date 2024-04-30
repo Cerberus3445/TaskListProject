@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/web/user/{id}/update(id=${user.getId()})}" th:object="${user}">
+    <label  for="name">Введите имя</label>
+    <input type="text" th:field="*{name}" id="name">
+    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+    <br>
+    <label for="email">Введите почту</label>
+    <input type="text" th:field="*{email}" id="email">
+    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+    <br>
+    <label for="password">Введите пароль</label>
+    <input type="text" th:field="*{password}" id="password">
+    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+    <br>
+    <input type="submit" value="Обновить">
+</form>
+</body>
+</html>

@@ -6,5 +6,9 @@ spring:
     username: postgres
     password: Strekoza84
     driver-class-name: org.postgresql.Driver
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 server:
   port: 9001

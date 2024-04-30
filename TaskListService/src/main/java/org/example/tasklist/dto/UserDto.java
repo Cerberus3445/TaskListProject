@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Schema(description = "User Dto")
 public class UserDto {
 
+    private int id;
+
     @Schema(description = "User name", example = "Mike")
     private String name;
 

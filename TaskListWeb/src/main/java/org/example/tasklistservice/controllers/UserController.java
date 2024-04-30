@@ -1,25 +1,16 @@
 package org.example.tasklistservice.controllers;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.client.RestClient;
 import org.example.tasklistservice.exception.UserNotFoundException;
-import org.example.tasklistservice.util.ExceptionBody;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-
-import java.util.Locale;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/web")
+@RequestMapping("/web/user")
 public class UserController {
 
     private final RestClient restClient;
@@ -35,15 +26,21 @@ public class UserController {
         return "users/aboutUser";
     }
 
-    @GetMapping("/hello")
-    public String hello(){
-        return "users/hello";
+    @GetMapping("/{id}/update")
+    public String updateUserPage(@PathVariable("id") int id, Model model){
+        model.addAttribute("user", restClient.getUser(id));
+        return "users/update";
     }
 
-    @GetMapping("/create")
-    public String createUserPage(Model model){
-        model.addAttribute("user", new User());
-        return "users/create";
+    @PostMapping("/{id}/update")
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") int id){
+        restClient.update(user, id);
+        return "redirect:/web/user/1";
     }
 
+    @DeleteMapping("/{id}")
+    public String deleteUserById(@PathVariable("id") int id){
+        restClient.deleteUser(id);
+        return "/auth/login";
+    }
 }
