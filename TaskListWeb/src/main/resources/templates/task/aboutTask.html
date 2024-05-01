@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${task.getTitle()}"></h1>
+<h1 th:text="${task.getDescription()}"></h1>
+<h1 th:text="${task.getExpirationDate()}"></h1>
+<h1 th:text="${task.getStatus()}"></h1>
+
+<a th:href="@{/web/user/{id}/tasks(id=${task.getUser().getId()})}">К списку задач</a>
+
+<form th:method="DELETE" th:action="@{/web/user/{id}/tasks/{taskId}(id=${task.getUser().getId()}, taskId=${task.getId()})}">
+    <input type="submit" value="Удалить">
+</form>
+
+</body>
+</html>

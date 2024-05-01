@@ -8,6 +8,9 @@ import org.example.tasklist.domain.task.Status;
 @Schema(description = "Task Dto")
 public class TaskDto {
 
+    @Schema(description = "Task id", example = "1")
+    private int id;
+
     @Schema(description = "Task title", example = "Eat chicken")
     private String title;
 

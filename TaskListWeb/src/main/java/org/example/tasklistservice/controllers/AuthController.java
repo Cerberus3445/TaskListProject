@@ -1,7 +1,7 @@
 package org.example.tasklistservice.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.tasklistservice.client.RestClient;
+import org.example.tasklistservice.client.UserRestClient;
 import org.example.tasklistservice.domain.user.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final RestClient restClient;
+    private final UserRestClient userRestClient;
 
     @GetMapping("/registration")
     public String createUserPage(Model model){
@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     public String createUser(@ModelAttribute("user") User user){
-        restClient.createUser(user);
+        userRestClient.createUser(user);
         return "auth/login";
     }
 

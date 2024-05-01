@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.UserDto;
-import org.example.tasklist.services.TaskService;
 import org.example.tasklist.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -51,4 +50,5 @@ public class UserController {
         userService.deleteUserById(id);
         return HttpStatus.OK;
     }
+
 }

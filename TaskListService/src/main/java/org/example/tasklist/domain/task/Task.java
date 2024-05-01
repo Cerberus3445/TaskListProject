@@ -5,6 +5,7 @@ import lombok.Data;
 import org.example.tasklist.domain.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity

@@ -18,16 +18,16 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
-public class RestClient{
+public class UserRestClient {
 
     private final ModelMapper modelMapper;
 
     private final PasswordEncoder passwordEncoder;
 
+    private final RestTemplate template = new RestTemplate();
 
     public User getUser(int id){
         try {
-            RestTemplate template = new RestTemplate();
             String url = "http://localhost:9000/api/user/" + id;
             UserDto user = template.getForObject(url, UserDto.class);
             return modelMapper.map(user, User.class);
@@ -56,7 +56,6 @@ public class RestClient{
 
     public void deleteUser(int id){
         try {
-            RestTemplate template = new RestTemplate();
             String url = "http://localhost:9000/api/user/" + id + "/delete";
             template.delete(url);
         } catch (HttpClientErrorException.NotFound notFound){
@@ -66,7 +65,6 @@ public class RestClient{
 
     public void create(Map<String, String> hashmap){
         try {
-            RestTemplate template = new RestTemplate();
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
@@ -79,7 +77,6 @@ public class RestClient{
 
     public void update(Map<String, String> hashmap, int userId){
         try {
-            RestTemplate template = new RestTemplate();
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);

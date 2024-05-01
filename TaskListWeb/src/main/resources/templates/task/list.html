@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:each="task : ${tasks}">
+    <a th:href="@{/web/user/{id}/tasks/{taskId}(id=${task.getUser().getId()}, taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
+</div>
+
+<a th:href="@{/web/user/{id}/tasks/create(id=${task.getUser().getId()})}">Создать задачу</a>
+</body>
+</html>

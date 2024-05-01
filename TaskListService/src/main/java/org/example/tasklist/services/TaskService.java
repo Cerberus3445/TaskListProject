@@ -1,5 +1,6 @@
 package org.example.tasklist.services;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklist.domain.exception.TaskNotFoundException;
 import org.example.tasklist.domain.task.Status;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -55,5 +57,13 @@ public class TaskService {
         }
         LocalDateTime localDateTime = LocalDateTime.of(list.get(0),list.get(1),list.get(2), list.get(3), list.get(4));
         return localDateTime;
+    }
+
+    public String convertLocalDataTimeFromTaskDtoToString(String expirationDate){
+        expirationDate = expirationDate.replaceAll("-", " ");
+        expirationDate = expirationDate.replaceAll(":", " ");
+        expirationDate = expirationDate.replaceAll("T", " ");
+        expirationDate = expirationDate.replaceAll(" ", "-");
+        return expirationDate;
     }
 }
