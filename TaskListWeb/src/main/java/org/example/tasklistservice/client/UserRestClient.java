@@ -46,11 +46,12 @@ public class UserRestClient {
     }
 
     public void update(User user, int id){
+        User thisUser = getUser(id); //берём у того же юзера пароль(с модели приходит юзер без пароля, так как в бд он уже закодирован)
         Map<String, String> map = new HashMap<>();
         map.put("id", String.valueOf(id));
         map.put("name", user.getName());
         map.put("email", user.getEmail());
-        map.put("password", passwordEncoder.encode(user.getPassword()));
+        map.put("password", passwordEncoder.encode(thisUser.getPassword()));
         update(map, user.getId());
     }
 
@@ -69,7 +70,7 @@ public class UserRestClient {
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
             String url = "http://localhost:9000/api/user";
-            UserDto string = template.postForObject(url, request, UserDto.class);
+            template.postForObject(url, request, UserDto.class);
         } catch (Exception e){
 
         }
@@ -81,7 +82,7 @@ public class UserRestClient {
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
             String url = "http://localhost:9000/api/user/" + userId + "/update";
-            UserDto string = template.postForObject(url, request, UserDto.class);
+            template.postForObject(url, request, UserDto.class);
         } catch (Exception e){
 
         }

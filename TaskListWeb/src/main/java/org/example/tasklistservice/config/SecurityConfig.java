@@ -28,14 +28,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**")
                 .permitAll()
-                .requestMatchers("/swagger-ui/**")
-                .permitAll()
                 .anyRequest()
                 .authenticated())
                 .formLogin(login -> login.
                         loginPage("/auth/login")
                         .loginProcessingUrl("/process_login")
-                        .defaultSuccessUrl("/web/user/1", true)
+                        .defaultSuccessUrl("/web/user/aboutUser", true)
                         .failureUrl("/auth/login?error"));
         return http.build();
 //        http.authorizeRequests(authorizeRequests -> authorizeRequests.requestMatchers())

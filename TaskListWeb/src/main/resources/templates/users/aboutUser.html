@@ -7,9 +7,9 @@
 <body>
 <h1 th:text="${user.getName()}"></h1>
 
-<a th:href="@{/web/user/{id}/update(id=${user.getId()})}">Обновить</a>
+<a th:href="@{/web/user/aboutUser/update}">Обновить</a>
 
-<a th:href="@{/web/user/{id}/tasks(id=${user.getId()})}">Список задач</a>
+<a th:href="@{/web/user/aboutUser/tasks}">Список задач</a>
 
 <form th:method="DELETE" th:action="@{/web/user/{id}(id=${user.getId()})}">
     <input type="submit" value="Delete account">

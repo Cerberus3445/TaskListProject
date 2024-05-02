@@ -7,9 +7,9 @@
 <body>
 
 <div th:each="task : ${tasks}">
-    <a th:href="@{/web/user/{id}/tasks/{taskId}(id=${task.getUser().getId()}, taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
+    <a th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
 </div>
 
-<a th:href="@{/web/user/{id}/tasks/create(id=${task.getUser().getId()})}">Создать задачу</a>
+<a th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
 </body>
 </html>

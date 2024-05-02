@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/web/user/{id}/tasks/create(id=${task.getUser().getId()})}" th:object="${task}">
+<form th:method="POST" th:action="@{/web/user/{id}/tasks/create(id=${user.getId()})}" th:object="${task}">
 
     <label for="title">Введите название задачи:</label>
     <input type="text" th:field="*{title}" id="title">

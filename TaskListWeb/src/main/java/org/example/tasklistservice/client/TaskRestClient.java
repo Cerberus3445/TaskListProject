@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.UserNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -56,7 +53,7 @@ public class TaskRestClient {
         }
     }
 
-    public LocalDateTime formatStringToLocalDataTime(String string){
+    public LocalDateTime formatStringToLocalDataTime(String string){ //Форматируем expirationDate из JSON в localDateTime
         String[] array = string.split("-");
         List<Integer> list = new ArrayList<>();
         for (String x : array) {
@@ -66,7 +63,7 @@ public class TaskRestClient {
         return localDateTime;
     }
 
-    public Task toTask(TaskDto taskDto, int userId){
+    public Task toTask(TaskDto taskDto, int userId){ //Маппим в таску вручную, так как ModelMapper не может десереализовать и кидается Jackson exception
         Task task = new Task();
         task.setUser(userRestClient.getUser(userId));
         task.setId(taskDto.getId());
