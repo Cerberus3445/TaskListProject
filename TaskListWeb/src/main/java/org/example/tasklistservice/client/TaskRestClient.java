@@ -1,16 +1,22 @@
 package org.example.tasklistservice.client;
 
 import lombok.RequiredArgsConstructor;
+import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.UserNotFoundException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ public class TaskRestClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final UserRestClient userRestClient;
+
 
     public Task getTask(int userId, int taskId){
         try {
@@ -41,6 +48,44 @@ public class TaskRestClient {
             return taskList;
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("User with this id not found");
+        }
+    }
+
+    public Map<String, String> formatTaskDtoToJson(TaskDto taskDto){
+        Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(taskDto.getId()));
+        map.put("title", taskDto.getTitle());
+        map.put("description", taskDto.getDescription());
+        map.put("expirationDate", taskDto.getExpirationDate());
+        map.put("status", taskDto.getStatus().toString());
+        return map;
+    }
+
+    public void createTask(int userId, TaskDto taskDto){
+        try {
+            taskDto.setStatus(Status.PLANNED);
+            String url = "http://localhost:9000/api/user/%d/tasks/create".formatted(userId);
+            Map<String, String> map = formatTaskDtoToJson(taskDto);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Object> request = new HttpEntity<>(map, httpHeaders);
+            restTemplate.postForObject(url, request, String.class);
+        } catch (HttpClientErrorException.NotFound notFound){
+            throw new UserNotFoundException("User with this id not found");
+        }
+    }
+
+    public void updateTask(int userId, TaskDto taskDto){
+        try {
+            taskDto.setStatus(Status.PLANNED); //TODO
+            String url = "http://localhost:9000/api/user/%d/tasks/%d/update".formatted(userId, taskDto.getId());
+            Map<String, String> map = formatTaskDtoToJson(taskDto);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Object> request = new HttpEntity<>(map, httpHeaders);
+            restTemplate.postForObject(url, request, String.class);
+        } catch (HttpClientErrorException.NotFound notFound){
+            throw new UserNotFoundException("User or task with this id not found");
         }
     }
 
@@ -72,5 +117,24 @@ public class TaskRestClient {
         task.setDescription(taskDto.getDescription());
         task.setExpirationDate(formatStringToLocalDataTime(taskDto.getExpirationDate()));
         return task;
+    }
+
+    public TaskDto toTaskDto(Task task){
+        String time = convertLocalDataTimeFromTaskDtoToString(task.getExpirationDate().toString());
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
+        taskDto.setTitle(task.getTitle());
+        taskDto.setDescription(task.getDescription());
+        taskDto.setStatus(task.getStatus());
+        taskDto.setExpirationDate(time);
+        return taskDto;
+    }
+
+    public String convertLocalDataTimeFromTaskDtoToString(String expirationDate){
+        expirationDate = expirationDate.replaceAll("-", " ");
+        expirationDate = expirationDate.replaceAll(":", " ");
+        expirationDate = expirationDate.replaceAll("T", " ");
+        expirationDate = expirationDate.replaceAll(" ", "-");
+        return expirationDate;
     }
 }

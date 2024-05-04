@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-
-<form th:method="POST" th:action="@{/web/user/aboutUser/tasks/create}" th:object="${task}">
+<h1>Изменить задачу</h1>
+<form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/update(taskId=${task.getId()})}" th:object="${task}">
 
     <label for="title">Введите название задачи:</label>
     <input type="text" th:field="*{title}" id="title">
@@ -20,8 +20,7 @@
     <input type="text" th:field="*{expirationDate}" id="expirationDate">
     <p th:if="${#fields.hasErrors('expirationDate')}" th:errors="*{expirationDate}"></p>
 
-    <input  type="submit" value="Создать">
+    <input  type="submit" value="Обновить">
 </form>
-
 </body>
 </html>

@@ -53,13 +53,23 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a task and assign it to the user")
+    @Operation(summary = "Create task and assign it to the user")
     public HttpStatus createTaskDto(@PathVariable("id") int id, @RequestBody TaskDto taskDto){
         Task task = modelMapper.map(taskDto, Task.class);
         LocalDateTime date = taskService.formatStringToLocalDataTime(taskDto.getExpirationDate());
         task.setExpirationDate(date);
         taskService.createTask(id, task);
         return HttpStatus.CREATED;
+    }
+
+    @PostMapping("/{taskId}/update")
+    @Operation(summary = "Update task and assign it to the user")
+    public HttpStatus updateTask(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
+        Task task = modelMapper.map(taskDto, Task.class);
+        LocalDateTime date = taskService.formatStringToLocalDataTime(taskDto.getExpirationDate());
+        task.setExpirationDate(date);
+        taskService.updateTask(id, task);
+        return HttpStatus.OK;
     }
 
     @PostMapping("/{taskId}/status")

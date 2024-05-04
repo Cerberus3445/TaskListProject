@@ -34,9 +34,14 @@ public class TaskService {
         return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
     }
 
-    public Task updateTask(Task updatedTask){
-       Task task = taskRepository.save(updatedTask);
-       return task;
+    public Task updateTask(int taskId, Task updatedTask){
+        Task task = getTaskById(taskId);
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setStatus(updatedTask.getStatus());
+        task.setExpirationDate(updatedTask.getExpirationDate());
+        taskRepository.save(task);
+        return task;
     }
 
     public Task changeStatus(int taskId, Status status){
