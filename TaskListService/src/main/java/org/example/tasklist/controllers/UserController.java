@@ -2,13 +2,18 @@ package org.example.tasklist.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.example.tasklist.domain.exception.TaskNotUpdatedException;
+import org.example.tasklist.domain.exception.UserNotCreatedException;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.UserDto;
 import org.example.tasklist.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
@@ -24,7 +29,14 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create user")
-    public UserDto createUser(@RequestBody UserDto userDto){
+    public UserDto createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(FieldError fieldError : bindingResult.getFieldErrors()){
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+            }
+            throw new UserNotCreatedException(stringBuilder.toString());
+        }
         User user = modelMapper.map(userDto, User.class);
         userService.createUser(user);
         return userDto;

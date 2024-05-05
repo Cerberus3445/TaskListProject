@@ -1,10 +1,8 @@
 package org.example.tasklist.controllers;
 
-import org.example.tasklist.domain.exception.TaskNotFoundException;
-import org.example.tasklist.domain.exception.UserNotFoundException;
+import org.example.tasklist.domain.exception.*;
 import org.example.tasklist.util.ExceptionBody;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,4 +24,24 @@ public class AdviceController {
         return exceptionBody;
     }
 
+    @ExceptionHandler(TaskNotCreatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerException(TaskNotCreatedException taskNotCreatedException){
+        ExceptionBody exceptionBody = new ExceptionBody(taskNotCreatedException.getMessage());
+        return exceptionBody;
+    }
+
+    @ExceptionHandler(TaskNotUpdatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerException(TaskNotUpdatedException taskNotUpdatedException){
+        ExceptionBody exceptionBody = new ExceptionBody(taskNotUpdatedException.getMessage());
+        return exceptionBody;
+    }
+
+    @ExceptionHandler(UserNotCreatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerException(UserNotCreatedException userNotCreatedException){
+        ExceptionBody exceptionBody = new ExceptionBody(userNotCreatedException.getMessage());
+        return exceptionBody;
+    }
 }

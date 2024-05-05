@@ -1,9 +1,12 @@
 package org.example.tasklistservice.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @AllArgsConstructor

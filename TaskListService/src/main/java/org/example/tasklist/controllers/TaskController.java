@@ -2,7 +2,10 @@ package org.example.tasklist.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.tasklist.domain.exception.TaskNotCreatedException;
+import org.example.tasklist.domain.exception.TaskNotUpdatedException;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.StatusDto;
@@ -11,6 +14,8 @@ import org.example.tasklist.services.TaskService;
 import org.example.tasklist.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -54,7 +59,14 @@ public class TaskController {
 
     @PostMapping("/create")
     @Operation(summary = "Create task and assign it to the user")
-    public HttpStatus createTaskDto(@PathVariable("id") int id, @RequestBody TaskDto taskDto){
+    public HttpStatus createTaskDto(@PathVariable("id") int id, @RequestBody @Valid TaskDto taskDto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(FieldError fieldError : bindingResult.getFieldErrors()){
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+            }
+            throw new TaskNotCreatedException(stringBuilder.toString());
+        }
         Task task = modelMapper.map(taskDto, Task.class);
         LocalDateTime date = taskService.formatStringToLocalDataTime(taskDto.getExpirationDate());
         task.setExpirationDate(date);
@@ -64,7 +76,14 @@ public class TaskController {
 
     @PostMapping("/{taskId}/update")
     @Operation(summary = "Update task and assign it to the user")
-    public HttpStatus updateTask(@PathVariable("taskId") int id, @RequestBody TaskDto taskDto){
+    public HttpStatus updateTask(@PathVariable("taskId") int id, @RequestBody @Valid TaskDto taskDto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(FieldError fieldError : bindingResult.getFieldErrors()){
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+            }
+            throw new TaskNotUpdatedException(stringBuilder.toString());
+        }
         Task task = modelMapper.map(taskDto, Task.class);
         LocalDateTime date = taskService.formatStringToLocalDataTime(taskDto.getExpirationDate());
         task.setExpirationDate(date);

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
+import org.example.tasklistservice.exception.TaskNotCreatedException;
+import org.example.tasklistservice.exception.TaskNotUpdatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -72,6 +74,8 @@ public class TaskRestClient {
             restTemplate.postForObject(url, request, String.class);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("User with this id not found");
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new TaskNotCreatedException(badRequest.getMessage());
         }
     }
 
@@ -86,6 +90,8 @@ public class TaskRestClient {
             restTemplate.postForObject(url, request, String.class);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("User or task with this id not found");
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new TaskNotUpdatedException(badRequest.getMessage());
         }
     }
 

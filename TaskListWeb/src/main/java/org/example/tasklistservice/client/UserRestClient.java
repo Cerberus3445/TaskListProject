@@ -3,6 +3,7 @@ package org.example.tasklistservice.client;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.UserDto;
+import org.example.tasklistservice.exception.UserNotCreatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
@@ -71,8 +72,8 @@ public class UserRestClient {
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
             String url = "http://localhost:9000/api/user";
             template.postForObject(url, request, UserDto.class);
-        } catch (Exception e){
-
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new UserNotCreatedException(badRequest.getMessage());
         }
     }
 

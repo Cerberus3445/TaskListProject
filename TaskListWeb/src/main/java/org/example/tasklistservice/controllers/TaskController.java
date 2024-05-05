@@ -1,14 +1,19 @@
 package org.example.tasklistservice.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.client.TaskRestClient;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
+import org.example.tasklistservice.exception.ErrorHandling;
+import org.example.tasklistservice.exception.TaskNotCreatedException;
+import org.example.tasklistservice.exception.TaskNotUpdatedException;
 import org.example.tasklistservice.security.PersonDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -18,7 +23,7 @@ public class TaskController {
 
     private final TaskRestClient taskRestClient;
 
-    private final ModelMapper modelMapper;
+    private final ErrorHandling errorHandling;
 
     @GetMapping
     public String getTasksByUserId(Model model){
@@ -47,15 +52,25 @@ public class TaskController {
     }
 
     @PostMapping("/{taskId}/update")
-    public String updateTask(@PathVariable("taskId") int taskId, @ModelAttribute("task") TaskDto taskDto){
+    public String updateTask(@PathVariable("taskId") int taskId, @ModelAttribute("task") TaskDto taskDto, Model model){
         taskDto.setId(taskId);
-        taskRestClient.updateTask(getUserId(), taskDto);
+        try {
+            taskRestClient.updateTask(getUserId(), taskDto);
+        } catch (TaskNotUpdatedException taskNotUpdatedException){
+            model.addAttribute("error", errorHandling.taskNotUpdateException(taskNotUpdatedException));
+            return "task/updateTask";
+        }
         return "redirect:/web/user/aboutUser/tasks";
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute("task") TaskDto taskDto){
-        taskRestClient.createTask(getUserId(), taskDto);
+    public String createTask(@ModelAttribute("task") TaskDto taskDto, Model model){
+       try {
+           taskRestClient.createTask(getUserId(), taskDto);
+       } catch (TaskNotCreatedException taskNotCreatedException){
+            model.addAttribute("error", errorHandling.taskNotCreatedException(taskNotCreatedException));
+            return "task/createTask";
+        }
         return "redirect:/web/user/aboutUser/tasks";
     }
 

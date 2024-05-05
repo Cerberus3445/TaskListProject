@@ -3,6 +3,7 @@ package org.example.tasklistservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.client.UserRestClient;
 import org.example.tasklistservice.domain.user.User;
+import org.example.tasklistservice.exception.UserNotCreatedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,14 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String createUser(@ModelAttribute("user") User user){
-        userRestClient.createUser(user);
-        return "auth/login";
+    public String createUser(@ModelAttribute("user") User user, Model model){
+        try {
+            userRestClient.createUser(user);
+            return "auth/login";
+        } catch (UserNotCreatedException userNotCreatedException){
+            model.addAttribute("errors", userNotCreatedException.getMessage());
+            return "auth/registration";
+        }
     }
 
     @GetMapping("/login")
