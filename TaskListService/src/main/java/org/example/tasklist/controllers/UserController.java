@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.example.tasklist.domain.exception.TaskNotUpdatedException;
 import org.example.tasklist.domain.exception.UserNotCreatedException;
+import org.example.tasklist.domain.exception.UserNotUpdatedException;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.UserDto;
 import org.example.tasklist.services.UserService;
@@ -51,7 +52,14 @@ public class UserController {
 
     @PostMapping("/{id}/update")
     @Operation(summary = "Update user")
-    public UserDto updateUser(@PathVariable("id") int id, @RequestBody UserDto userDto){
+    public UserDto updateUser(@PathVariable("id") int id, @RequestBody @Valid UserDto userDto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(FieldError fieldError : bindingResult.getFieldErrors()){
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+            }
+            throw new UserNotUpdatedException(stringBuilder.toString());
+        }
         User user = modelMapper.map(userDto, User.class);
         userService.updateUser(id, user);
         return userDto;

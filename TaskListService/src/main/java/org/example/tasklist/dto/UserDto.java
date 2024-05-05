@@ -24,6 +24,6 @@ public class UserDto {
     private String email;
 
     @Schema(description = "User password", example = "dasdasdafsdfkdsfj")
-    @Size(min = 5, max = 40, message = "Пароль должен составлять от 5 до 40 символов")
+    @Size(min = 5, max = 120, message = "Пароль должен составлять от 5 до 120 символов")
     private String password;
 }

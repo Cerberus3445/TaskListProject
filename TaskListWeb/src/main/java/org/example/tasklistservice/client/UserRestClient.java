@@ -5,6 +5,7 @@ import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.UserDto;
 import org.example.tasklistservice.exception.UserNotCreatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
+import org.example.tasklistservice.exception.UserNotUpdatedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,7 +53,7 @@ public class UserRestClient {
         map.put("id", String.valueOf(id));
         map.put("name", user.getName());
         map.put("email", user.getEmail());
-        map.put("password", passwordEncoder.encode(thisUser.getPassword()));
+        map.put("password", thisUser.getPassword());
         update(map, user.getId());
     }
 
@@ -84,8 +85,8 @@ public class UserRestClient {
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
             String url = "http://localhost:9000/api/user/" + userId + "/update";
             template.postForObject(url, request, UserDto.class);
-        } catch (Exception e){
-
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new UserNotUpdatedException(badRequest.getMessage());
         }
     }
 }

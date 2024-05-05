@@ -44,4 +44,11 @@ public class AdviceController {
         ExceptionBody exceptionBody = new ExceptionBody(userNotCreatedException.getMessage());
         return exceptionBody;
     }
+
+    @ExceptionHandler(UserNotUpdatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerException(UserNotUpdatedException userNotUpdatedException){
+        ExceptionBody exceptionBody = new ExceptionBody(userNotUpdatedException.getMessage());
+        return exceptionBody;
+    }
 }

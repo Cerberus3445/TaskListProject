@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.client.UserRestClient;
 import org.example.tasklistservice.exception.UserNotFoundException;
+import org.example.tasklistservice.exception.UserNotUpdatedException;
 import org.example.tasklistservice.security.PersonDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -36,12 +37,14 @@ public class UserController {
     }
 
     @PostMapping("/{id}/update")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, @PathVariable("id") int id){
-        if(bindingResult.hasErrors()){
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") int id, Model model){
+        try {
+            userRestClient.update(user, id);
+        } catch (UserNotUpdatedException userNotUpdatedException){
+            model.addAttribute("error",  userNotUpdatedException.getMessage());
             return "users/update";
         }
-        userRestClient.update(user, id);
-        return "redirect:/web/user/1";
+        return "redirect:/web/user/aboutUser";
     }
 
     @DeleteMapping("/{id}")

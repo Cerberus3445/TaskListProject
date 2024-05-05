@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
+<div th:list="${error}">
+    <h1 style="color: red" th:text="${error}"></h1>
+</div>
 <form th:method="POST" th:action="@{/web/user/{id}/update(id=${user.getId()})}" th:object="${user}">
     <label  for="name">Введите имя</label>
     <input type="text" th:field="*{name}" id="name">
