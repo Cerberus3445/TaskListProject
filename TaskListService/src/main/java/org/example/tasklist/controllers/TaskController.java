@@ -42,7 +42,6 @@ public class TaskController {
         List<TaskDto> taskDtoList = new ArrayList<>();
         for(Task task : taskList){
             TaskDto taskDto = modelMapper.map(task, TaskDto.class);
-            taskDto.setExpirationDate(taskService.convertLocalDataTimeFromTaskDtoToString(taskDto.getExpirationDate()));
             taskDtoList.add(taskDto);
         }
         return taskDtoList;
@@ -53,7 +52,6 @@ public class TaskController {
     public TaskDto getTaskById(@PathVariable("taskId") int taskId){
         Task task = taskService.getTaskById(taskId);
         TaskDto taskDto = modelMapper.map(task, TaskDto.class);
-        taskDto.setExpirationDate(taskService.convertLocalDataTimeFromTaskDtoToString(taskDto.getExpirationDate()));
         return taskDto;
     }
 
@@ -68,8 +66,6 @@ public class TaskController {
             throw new TaskNotCreatedException(stringBuilder.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
-        LocalDateTime date = taskService.formatStringToLocalDataTime(taskDto.getExpirationDate());
-        task.setExpirationDate(date);
         taskService.createTask(id, task);
         return HttpStatus.CREATED;
     }
@@ -85,8 +81,6 @@ public class TaskController {
             throw new TaskNotUpdatedException(stringBuilder.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
-        LocalDateTime date = taskService.formatStringToLocalDataTime(taskDto.getExpirationDate());
-        task.setExpirationDate(date);
         taskService.updateTask(id, task);
         return HttpStatus.OK;
     }

@@ -1,12 +1,13 @@
 package org.example.tasklistservice.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
-import org.hibernate.validator.constraints.Length;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -21,5 +22,8 @@ public class TaskDto {
 
     private Status status;
 
-    private String expirationDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime expirationDate;
+
+    private String expirationDateString; //в это поле с html летит дата(обычная строка), а потом её обрабатываем в LocalDateTime expirationDate
 }

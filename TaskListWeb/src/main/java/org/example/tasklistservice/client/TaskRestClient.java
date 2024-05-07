@@ -3,10 +3,12 @@ package org.example.tasklistservice.client;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
+import org.example.tasklistservice.dto.StatusDto;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.TaskNotCreatedException;
 import org.example.tasklistservice.exception.TaskNotUpdatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -28,12 +30,13 @@ public class TaskRestClient {
 
     private final UserRestClient userRestClient;
 
+    private final ModelMapper modelMapper;
 
     public Task getTask(int userId, int taskId){
         try {
             String url = "http://localhost:9000/api/user/%d/tasks/%d".formatted(userId, taskId);
             TaskDto taskDto = restTemplate.getForObject(url, TaskDto.class);
-            return toTask(taskDto, userId);
+            return modelMapper.map(taskDto, Task.class);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("User with this id not found");
         }
@@ -45,7 +48,7 @@ public class TaskRestClient {
             List<Task> taskList = new ArrayList<>();
             TaskDto[] taskDto = restTemplate.getForObject(url, TaskDto[].class);
             for(int i = 0; i < taskDto.length; i++){
-                taskList.add(toTask(taskDto[i], id));
+                taskList.add(modelMapper.map(taskDto[i], Task.class));
             }
             return taskList;
         } catch (HttpClientErrorException.NotFound notFound){
@@ -58,9 +61,17 @@ public class TaskRestClient {
         map.put("id", String.valueOf(taskDto.getId()));
         map.put("title", taskDto.getTitle());
         map.put("description", taskDto.getDescription());
-        map.put("expirationDate", taskDto.getExpirationDate());
+        map.put("expirationDate", taskDto.getExpirationDate().toString().replace("T", " "));
         map.put("status", taskDto.getStatus().toString());
         return map;
+    }
+
+    public List<Status> allStatus(){
+        List<Status> statusList = new ArrayList<>();
+        statusList.add(Status.PLANNED);
+        statusList.add(Status.IN_PROGRESS);
+        statusList.add(Status.DONE);
+        return statusList;
     }
 
     public void createTask(int userId, TaskDto taskDto){
@@ -104,43 +115,38 @@ public class TaskRestClient {
         }
     }
 
-    public LocalDateTime formatStringToLocalDataTime(String string){ //Форматируем expirationDate из JSON в localDateTime
-        String[] array = string.split("-");
-        List<Integer> list = new ArrayList<>();
-        for (String x : array) {
-            list.add(Integer.valueOf(x));
+    public void setTaskStatus(int userId, int taskId, Status status){
+        Map<String, String> map = new HashMap<>();
+        try {
+            map.put("status", status.toString());
+            String url = "http://localhost:9000/api/user/%d/tasks/%d/status".formatted(userId, taskId);
+            restTemplate.postForObject(url, map, String.class);
+        } catch (Exception e){
+
         }
+    }
+
+    public LocalDateTime formatStringToLocalDataTime(String string){ //Форматируем expirationDate из JSON в localDateTime
+        String[] array = string.split(" ");
+        List<Integer> list = new ArrayList<>();
+
+        for (int i = 0; i < array.length; i++) {
+            if(i == 0){
+                String yearMonthDay = array[i];
+                String[] date = yearMonthDay.split("-");
+                for(String s : date){
+                    list.add(Integer.valueOf(s));
+                }
+            } else {
+                String hourAndMinutes = array[i];
+                String[] date = hourAndMinutes.split(":");
+                for(String s : date){
+                    list.add(Integer.valueOf(s));
+                }
+            }
+        }
+
         LocalDateTime localDateTime = LocalDateTime.of(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
         return localDateTime;
-    }
-
-    public Task toTask(TaskDto taskDto, int userId){ //Маппим в таску вручную, так как ModelMapper не может десереализовать и кидается Jackson exception
-        Task task = new Task();
-        task.setUser(userRestClient.getUser(userId));
-        task.setId(taskDto.getId());
-        task.setTitle(taskDto.getTitle());
-        task.setStatus(taskDto.getStatus());
-        task.setDescription(taskDto.getDescription());
-        task.setExpirationDate(formatStringToLocalDataTime(taskDto.getExpirationDate()));
-        return task;
-    }
-
-    public TaskDto toTaskDto(Task task){
-        String time = convertLocalDataTimeFromTaskDtoToString(task.getExpirationDate().toString());
-        TaskDto taskDto = new TaskDto();
-        taskDto.setId(task.getId());
-        taskDto.setTitle(task.getTitle());
-        taskDto.setDescription(task.getDescription());
-        taskDto.setStatus(task.getStatus());
-        taskDto.setExpirationDate(time);
-        return taskDto;
-    }
-
-    public String convertLocalDataTimeFromTaskDtoToString(String expirationDate){
-        expirationDate = expirationDate.replaceAll("-", " ");
-        expirationDate = expirationDate.replaceAll(":", " ");
-        expirationDate = expirationDate.replaceAll("T", " ");
-        expirationDate = expirationDate.replaceAll(" ", "-");
-        return expirationDate;
     }
 }

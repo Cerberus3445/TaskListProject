@@ -1,5 +1,6 @@
 package org.example.tasklistservice.domain.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.example.tasklistservice.domain.user.User;
@@ -24,12 +25,9 @@ public class Task {
     private User user;
 
     @Column(name = "title")
-    @NotEmpty(message = "Название не может равняться 0")
-    @Length(max = 40, message = "Максимальная длина должна равняться 40 символов")
     private String title;
 
     @Column(name = "description")
-    @Length(max = 1000, message = "Максимальная длина описания должна равняться 1000 символов")
     private String description;
 
     @Column(name = "status")
@@ -37,5 +35,6 @@ public class Task {
     private Status status;
 
     @Column(name = "expiration_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime expirationDate;
 }
