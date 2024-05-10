@@ -2,14 +2,14 @@ spring:
   jpa:
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/tasklist?currentSchema=tasklist
+    url: jdbc:postgresql://localhost:5432/tasklist?currentSchema=task_project
     username: postgres
     password: Strekoza84
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:liquibase/db.changelog.yaml
     enabled: true
-    default-schema: tasklist
+    default-schema: task_project
   sql:
     init:
       mode: never
@@ -29,4 +29,4 @@ spring:
           starttls:
             enable: true
 server:
-  port: 9000
+  port: 9002

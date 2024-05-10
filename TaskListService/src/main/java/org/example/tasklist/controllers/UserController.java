@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.example.tasklist.domain.exception.TaskNotUpdatedException;
 import org.example.tasklist.domain.exception.UserNotCreatedException;
 import org.example.tasklist.domain.exception.UserNotUpdatedException;
 import org.example.tasklist.domain.user.User;
@@ -16,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,6 +44,14 @@ public class UserController {
     @Operation(summary = "Show user by their id")
     public UserDto showUserById(@PathVariable("id") int id){
         User user = userService.showUserById(id);
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @GetMapping("/byEmail")
+    @Operation(summary = "Get user by email(for Spring Security)")
+    public UserDto getUserByEmail(@RequestParam("email") String email){
+        User user = userService.findByEmail(email);
+        if(user == null) return null;
         return modelMapper.map(user, UserDto.class);
     }
 

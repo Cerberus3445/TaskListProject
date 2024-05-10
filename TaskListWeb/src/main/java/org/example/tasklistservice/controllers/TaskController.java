@@ -1,6 +1,5 @@
 package org.example.tasklistservice.controllers;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.client.TaskRestClient;
 import org.example.tasklistservice.domain.task.Status;
@@ -14,10 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -33,7 +30,8 @@ public class TaskController {
 
     @GetMapping
     public String getTasksByUserId(Model model){
-        model.addAttribute("tasks", taskRestClient.getTasksByUserId(getUserId()));
+        List<Task> taskDtoList = taskRestClient.getTasksByUserId(getUserId());
+        model.addAttribute("tasks",taskDtoList);
         return "task/list";
     }
 

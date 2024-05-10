@@ -1,5 +1,6 @@
 package org.example.tasklistservice.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,17 +15,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**")
                 .permitAll()
@@ -34,21 +31,11 @@ public class SecurityConfig {
                         loginPage("/auth/login")
                         .loginProcessingUrl("/process_login")
                         .defaultSuccessUrl("/web/user/aboutUser", true)
-                        .failureUrl("/auth/login?error"));
+                        .failureUrl("/auth/login?error"))
+                .logout(logout ->
+                        logout.logoutUrl("/logout")
+                                .logoutSuccessUrl("/auth/login"));
         return http.build();
-//        http.authorizeRequests(authorizeRequests -> authorizeRequests.requestMatchers())
-//                .antMatchers("/admin").hasRole("ADMIN")
-//                .antMatchers("/auth/login", "/auth/registration", "/error").permitAll()
-//                .anyRequest().hasAnyRole("USER", "ADMIN")
-//                .and()
-//                .formLogin().loginPage("/auth/login")
-//                .loginProcessingUrl("/process_login")
-//                .defaultSuccessUrl("/hello", true)
-//                .failureUrl("/auth/login?error")
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/auth/login");
     }
 
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

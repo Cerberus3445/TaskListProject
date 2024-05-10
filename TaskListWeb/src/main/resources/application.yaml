@@ -1,11 +1,4 @@
 spring:
-  jpa:
-    show-sql: true
-  datasource:
-    url: jdbc:postgresql://localhost:5432/tasklist?currentSchema=tasklist
-    username: postgres
-    password: Strekoza84
-    driver-class-name: org.postgresql.Driver
   mvc:
     hiddenmethod:
       filter:

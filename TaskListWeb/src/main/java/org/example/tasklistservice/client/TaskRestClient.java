@@ -3,7 +3,7 @@ package org.example.tasklistservice.client;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
-import org.example.tasklistservice.dto.StatusDto;
+import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.TaskNotCreatedException;
 import org.example.tasklistservice.exception.TaskNotUpdatedException;
@@ -17,10 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -28,13 +25,11 @@ public class TaskRestClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final UserRestClient userRestClient;
-
     private final ModelMapper modelMapper;
 
     public Task getTask(int userId, int taskId){
         try {
-            String url = "http://localhost:9000/api/user/%d/tasks/%d".formatted(userId, taskId);
+            String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
             TaskDto taskDto = restTemplate.getForObject(url, TaskDto.class);
             return modelMapper.map(taskDto, Task.class);
         } catch (HttpClientErrorException.NotFound notFound){
@@ -44,7 +39,7 @@ public class TaskRestClient {
 
     public List<Task> getTasksByUserId(int id){
         try {
-            String url = "http://localhost:9000/api/user/%d/tasks".formatted(id);
+            String url = "http://localhost:9002/api/user/%d/tasks".formatted(id);
             List<Task> taskList = new ArrayList<>();
             TaskDto[] taskDto = restTemplate.getForObject(url, TaskDto[].class);
             for(int i = 0; i < taskDto.length; i++){
@@ -77,7 +72,7 @@ public class TaskRestClient {
     public void createTask(int userId, TaskDto taskDto){
         try {
             taskDto.setStatus(Status.PLANNED);
-            String url = "http://localhost:9000/api/user/%d/tasks/create".formatted(userId);
+            String url = "http://localhost:9002/api/user/%d/tasks/create".formatted(userId);
             Map<String, String> map = formatTaskDtoToJson(taskDto);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -92,8 +87,8 @@ public class TaskRestClient {
 
     public void updateTask(int userId, TaskDto taskDto){
         try {
-            taskDto.setStatus(Status.PLANNED); //TODO
-            String url = "http://localhost:9000/api/user/%d/tasks/%d/update".formatted(userId, taskDto.getId());
+            taskDto.setStatus(Status.PLANNED);
+            String url = "http://localhost:9002/api/user/%d/tasks/%d/update".formatted(userId, taskDto.getId());
             Map<String, String> map = formatTaskDtoToJson(taskDto);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -108,7 +103,7 @@ public class TaskRestClient {
 
     public void deleteTask(int userId, int taskId){
         try {
-            String url = "http://localhost:9000/api/user/%d/tasks/%d".formatted(userId, taskId);
+            String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
             restTemplate.delete(url);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("Task with this id not found");
@@ -119,7 +114,7 @@ public class TaskRestClient {
         Map<String, String> map = new HashMap<>();
         try {
             map.put("status", status.toString());
-            String url = "http://localhost:9000/api/user/%d/tasks/%d/status".formatted(userId, taskId);
+            String url = "http://localhost:9002/api/user/%d/tasks/%d/status".formatted(userId, taskId);
             restTemplate.postForObject(url, map, String.class);
         } catch (Exception e){
 

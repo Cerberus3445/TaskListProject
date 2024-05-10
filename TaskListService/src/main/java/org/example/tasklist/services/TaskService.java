@@ -5,6 +5,10 @@ import org.example.tasklist.domain.exception.TaskNotFoundException;
 import org.example.tasklist.domain.task.Status;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.repositories.TaskRepository;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

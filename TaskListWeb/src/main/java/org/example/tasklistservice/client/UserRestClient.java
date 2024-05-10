@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class UserRestClient {
 
     public User getUser(int id){
         try {
-            String url = "http://localhost:9000/api/user/" + id;
+            String url = "http://localhost:9002/api/user/" + id;
             UserDto user = template.getForObject(url, UserDto.class);
             return modelMapper.map(user, User.class);
         } catch (HttpClientErrorException.NotFound notFound){
@@ -59,7 +58,7 @@ public class UserRestClient {
 
     public void deleteUser(int id){
         try {
-            String url = "http://localhost:9000/api/user/" + id + "/delete";
+            String url = "http://localhost:9002/api/user/" + id + "/delete";
             template.delete(url);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException(notFound.getMessage());
@@ -71,7 +70,7 @@ public class UserRestClient {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
-            String url = "http://localhost:9000/api/user";
+            String url = "http://localhost:9002/api/user";
             template.postForObject(url, request, UserDto.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new UserNotCreatedException(badRequest.getMessage());
@@ -83,8 +82,18 @@ public class UserRestClient {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
-            String url = "http://localhost:9000/api/user/" + userId + "/update";
+            String url = "http://localhost:9002/api/user/%d/update".formatted(userId);
             template.postForObject(url, request, UserDto.class);
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new UserNotUpdatedException(badRequest.getMessage());
+        }
+    }
+
+    public User findByEmail(String username) {
+        try {
+            String url = "http://localhost:9002/api/user/byEmail?email=" + username;
+            UserDto user = template.getForObject(url, UserDto.class);
+            return modelMapper.map(user, User.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new UserNotUpdatedException(badRequest.getMessage());
         }
