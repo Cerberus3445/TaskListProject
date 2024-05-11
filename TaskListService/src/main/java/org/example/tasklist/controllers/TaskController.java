@@ -7,20 +7,17 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklist.domain.exception.TaskNotCreatedException;
 import org.example.tasklist.domain.exception.TaskNotUpdatedException;
 import org.example.tasklist.domain.task.Task;
-import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.StatusDto;
 import org.example.tasklist.dto.TaskDto;
-import org.example.tasklist.services.TaskService;
-import org.example.tasklist.services.UserService;
+import org.example.tasklist.services.impl.TaskServiceImpl;
+import org.example.tasklist.services.impl.UserServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,16 +26,16 @@ import java.util.List;
 @Tag(name = "Task Controller", description = "Task API")
 public class TaskController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
-    private final TaskService taskService;
+    private final TaskServiceImpl taskServiceImpl;
 
     private final ModelMapper modelMapper;
 
     @GetMapping
     @Operation(summary = "Get user tasks by their id")
     public List<TaskDto> getTasksByUserId(@PathVariable("id") int id){
-        List<Task> taskList = userService.getUserTasks(userService.showUserById(id));
+        List<Task> taskList = userServiceImpl.getUserTasks(userServiceImpl.showUserById(id));
         List<TaskDto> taskDtoList = new ArrayList<>();
         for(Task task : taskList){
             TaskDto taskDto = modelMapper.map(task, TaskDto.class);
@@ -50,7 +47,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     @Operation(summary = "Get task by their id")
     public TaskDto getTaskById(@PathVariable("taskId") int taskId){
-        Task task = taskService.getTaskById(taskId);
+        Task task = taskServiceImpl.getTaskById(taskId);
         TaskDto taskDto = modelMapper.map(task, TaskDto.class);
         return taskDto;
     }
@@ -66,7 +63,7 @@ public class TaskController {
             throw new TaskNotCreatedException(stringBuilder.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
-        taskService.createTask(id, task);
+        taskServiceImpl.createTask(id, task);
         return HttpStatus.CREATED;
     }
 
@@ -81,21 +78,21 @@ public class TaskController {
             throw new TaskNotUpdatedException(stringBuilder.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
-        taskService.updateTask(id, task);
+        taskServiceImpl.updateTask(id, task);
         return HttpStatus.OK;
     }
 
     @PostMapping("/{taskId}/status")
     @Operation(summary = "Change task status")
     public HttpStatus changeTaskStatus(@PathVariable("taskId") int taskId, @RequestBody StatusDto statusDto){
-        taskService.changeStatus(taskId, statusDto.getStatus());
+        taskServiceImpl.changeStatus(taskId, statusDto.getStatus());
         return HttpStatus.OK;
     }
 
     @DeleteMapping("/{taskId}")
     @Operation(summary = "Delete task by their id")
     public HttpStatus deleteTaskById(@PathVariable("taskId") int taskId){
-        taskService.deleteTask(taskId);
+        taskServiceImpl.deleteTask(taskId);
         return HttpStatus.OK;
     }
 }

@@ -8,7 +8,7 @@ import org.example.tasklist.domain.exception.UserNotCreatedException;
 import org.example.tasklist.domain.exception.UserNotUpdatedException;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.UserDto;
-import org.example.tasklist.services.UserService;
+import org.example.tasklist.services.impl.UserServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User Controller", description = "User API")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     private final ModelMapper modelMapper;
 
@@ -36,21 +36,21 @@ public class UserController {
             throw new UserNotCreatedException(stringBuilder.toString());
         }
         User user = modelMapper.map(userDto, User.class);
-        userService.createUser(user);
+        userServiceImpl.createUser(user);
         return userDto;
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Show user by their id")
     public UserDto showUserById(@PathVariable("id") int id){
-        User user = userService.showUserById(id);
+        User user = userServiceImpl.showUserById(id);
         return modelMapper.map(user, UserDto.class);
     }
 
     @GetMapping("/byEmail")
     @Operation(summary = "Get user by email(for Spring Security)")
     public UserDto getUserByEmail(@RequestParam("email") String email){
-        User user = userService.findByEmail(email);
+        User user = userServiceImpl.findByEmail(email);
         if(user == null) return null;
         return modelMapper.map(user, UserDto.class);
     }
@@ -66,14 +66,14 @@ public class UserController {
             throw new UserNotUpdatedException(stringBuilder.toString());
         }
         User user = modelMapper.map(userDto, User.class);
-        userService.updateUser(id, user);
+        userServiceImpl.updateUser(id, user);
         return userDto;
     }
 
     @DeleteMapping("/{id}/delete")
     @Operation(summary = "Delete user")
     public HttpStatus deleteUser(@PathVariable("id") int id){
-        userService.deleteUserById(id);
+        userServiceImpl.deleteUserById(id);
         return HttpStatus.OK;
     }
 
