@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.tasklist.domain.exception.PasswordNotValid;
 import org.example.tasklist.domain.exception.UserNotCreatedException;
 import org.example.tasklist.domain.exception.UserNotUpdatedException;
 import org.example.tasklist.domain.user.User;
+import org.example.tasklist.dto.PasswordDto;
 import org.example.tasklist.dto.UserDto;
 import org.example.tasklist.services.impl.UserServiceImpl;
 import org.modelmapper.ModelMapper;
@@ -81,6 +83,16 @@ public class UserController {
     @Operation(summary = "Delete user")
     public HttpStatus deleteUser(@PathVariable("id") int id){
         userServiceImpl.deleteUserById(id);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/{id}/updatePassword")
+    @Operation(summary = "Update user password")
+    public HttpStatus updateUserPassword(@RequestBody @Valid PasswordDto passwordDto, BindingResult bindingResult, @PathVariable("id") int id){
+        if(bindingResult.hasErrors()){
+            throw new PasswordNotValid("Длина пароля должен составлять от 5 до 120 символов");
+        }
+        userServiceImpl.updatePassword(id, passwordDto.getPassword());
         return HttpStatus.OK;
     }
 

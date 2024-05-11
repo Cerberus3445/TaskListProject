@@ -2,6 +2,7 @@ package org.example.tasklistservice.client;
 
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
+import org.example.tasklistservice.dto.PasswordDto;
 import org.example.tasklistservice.dto.UserDto;
 import org.example.tasklistservice.exception.UserNotCreatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
@@ -94,6 +95,16 @@ public class UserRestClient {
             String url = "http://localhost:9002/api/user/byEmail?email=" + username;
             UserDto user = template.getForObject(url, UserDto.class);
             return modelMapper.map(user, User.class);
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new UserNotUpdatedException(badRequest.getMessage());
+        }
+    }
+
+    public void updatePassword(int id, String password){
+        try {
+            String url = "http://localhost:9002/api/user/%d/updatePassword".formatted(id);
+            PasswordDto passwordDto = new PasswordDto(passwordEncoder.encode(password));
+            template.postForObject(url,passwordDto, String.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new UserNotUpdatedException(badRequest.getMessage());
         }

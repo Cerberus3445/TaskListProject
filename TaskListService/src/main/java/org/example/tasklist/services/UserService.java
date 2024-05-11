@@ -18,4 +18,6 @@ public interface UserService {
     List<Task> getUserTasks(User user);
 
     void deleteUserById(int id);
+
+    void updatePassword(int id, String password);
 }

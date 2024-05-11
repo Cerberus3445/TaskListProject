@@ -7,7 +7,6 @@ import org.example.tasklist.domain.exception.UserNotFoundException;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.repositories.UserRepository;
-import org.example.tasklist.services.MailService;
 import org.example.tasklist.services.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final MailService mailService;
+    private final MailServiceImpl mailServiceImpl;
 
 
     @Override
@@ -33,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user){
         User user1 = userRepository.save(user);
-        mailService.sendEmail(user, MailType.REGISTRATION, new Properties());
+        mailServiceImpl.sendEmail(user, MailType.REGISTRATION, new Properties());
         return user1;
     }
 
@@ -57,6 +56,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(int id){
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void updatePassword(int id, String password) {
+        User user = showUserById(id);
+        user.setPassword(password);
     }
 
 }

@@ -51,4 +51,11 @@ public class AdviceController {
         ExceptionBody exceptionBody = new ExceptionBody(userNotUpdatedException.getMessage());
         return exceptionBody;
     }
+
+    @ExceptionHandler(PasswordNotValid.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerException(PasswordNotValid passwordNotValid){
+        ExceptionBody exceptionBody = new ExceptionBody(passwordNotValid.getMessage());
+        return exceptionBody;
+    }
 }

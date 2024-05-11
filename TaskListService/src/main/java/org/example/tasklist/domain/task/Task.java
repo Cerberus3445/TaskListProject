@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "tasks")
-public class Task implements Serializable {
+public class Task {
 
     @Id
     @Column(name = "id")

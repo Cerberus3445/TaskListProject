@@ -37,6 +37,18 @@ public class UserController {
         return "users/update";
     }
 
+    @GetMapping("/aboutUser/updatePassword")
+    public String updatePasswordPage(){
+        return "users/updatePassword";
+    }
+
+    @PostMapping("/aboutUser/updatePassword")
+    public String updatePassword(@ModelAttribute("password") String password){
+        System.out.println(password);
+        userRestClient.updatePassword(getUserId(), password);
+        return "redirect:/web/user/aboutUser";
+    }
+
     @PostMapping("/{id}/update")
     public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") int id, Model model){
         try {

@@ -23,7 +23,7 @@ public class UserDto {
     @Email(message = "Некорректный email")
     private String email;
 
-    @Schema(description = "User password", example = "dasdasdafsdfkdsfj")
-    @Size(min = 5, max = 120, message = "Пароль должен составлять от 5 до 120 символов")
+    @Schema(description = "User password", example = "dasdasdafSDsdfkdsfj")
+    @Size(min = 5, max = 120, message = "Длина пароля должен составлять от 5 до 120 символов")
     private String password;
 }
