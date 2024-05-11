@@ -65,7 +65,25 @@ public class TaskController {
         } catch (TaskNotUpdatedException taskNotUpdatedException){
             model.addAttribute("error", errorHandling.taskNotUpdateException(taskNotUpdatedException));
             return "task/updateTask";
+        } catch (NumberFormatException e){
+            model.addAttribute("error", "Формат даты некорректен. Правильный формат: 2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты");
+            return "task/createTask";
         }
+        return "redirect:/web/user/aboutUser/tasks";
+    }
+
+    @PostMapping("/create")
+    public String createTask(@ModelAttribute("task") TaskDto taskDto, Model model){
+       try {
+           taskDto.setExpirationDate(taskRestClient.formatStringToLocalDataTime(taskDto.getExpirationDateString()));
+           taskRestClient.createTask(getUserId(), taskDto);
+       } catch (TaskNotCreatedException taskNotCreatedException){
+            model.addAttribute("error", errorHandling.taskNotCreatedException(taskNotCreatedException));
+            return "task/createTask";
+        } catch (NumberFormatException e){
+           model.addAttribute("error", "Формат даты некорректен. Правильный формат: 2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты");
+           return "task/createTask";
+       }
         return "redirect:/web/user/aboutUser/tasks";
     }
 
@@ -85,18 +103,6 @@ public class TaskController {
     public String changeStatusToDone(@PathVariable("taskId") int taskId){
         taskRestClient.setTaskStatus(getUserId(), taskId, Status.DONE);
         return "redirect:/web/user/aboutUser/tasks/%d".formatted(taskId);
-    }
-
-    @PostMapping("/create")
-    public String createTask(@ModelAttribute("task") TaskDto taskDto, Model model){
-       try {
-           taskDto.setExpirationDate(taskRestClient.formatStringToLocalDataTime(taskDto.getExpirationDateString()));
-           taskRestClient.createTask(getUserId(), taskDto);
-       } catch (TaskNotCreatedException taskNotCreatedException){
-            model.addAttribute("error", errorHandling.taskNotCreatedException(taskNotCreatedException));
-            return "task/createTask";
-        }
-        return "redirect:/web/user/aboutUser/tasks";
     }
 
     @DeleteMapping("/{taskId}")

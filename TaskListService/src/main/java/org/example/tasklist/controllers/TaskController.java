@@ -56,11 +56,13 @@ public class TaskController {
     @Operation(summary = "Create task and assign it to the user")
     public HttpStatus createTaskDto(@PathVariable("id") int id, @RequestBody @Valid TaskDto taskDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            StringBuilder stringBuilder = new StringBuilder();
+            List<String> errors = new ArrayList<>();
             for(FieldError fieldError : bindingResult.getFieldErrors()){
-                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
+                errors.add(stringBuilder.toString());
             }
-            throw new TaskNotCreatedException(stringBuilder.toString());
+            throw new TaskNotCreatedException(errors.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
         taskServiceImpl.createTask(id, task);
@@ -71,11 +73,13 @@ public class TaskController {
     @Operation(summary = "Update task and assign it to the user")
     public HttpStatus updateTask(@PathVariable("taskId") int id, @RequestBody @Valid TaskDto taskDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            StringBuilder stringBuilder = new StringBuilder();
+            List<String> errors = new ArrayList<>();
             for(FieldError fieldError : bindingResult.getFieldErrors()){
-                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
+                errors.add(stringBuilder.toString());
             }
-            throw new TaskNotUpdatedException(stringBuilder.toString());
+            throw new TaskNotUpdatedException(errors.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
         taskServiceImpl.updateTask(id, task);

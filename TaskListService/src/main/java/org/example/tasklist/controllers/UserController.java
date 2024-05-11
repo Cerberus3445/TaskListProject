@@ -15,6 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -29,11 +32,13 @@ public class UserController {
     @Operation(summary = "Create user")
     public UserDto createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            StringBuilder stringBuilder = new StringBuilder();
+            List<String> errors = new ArrayList<>();
             for(FieldError fieldError : bindingResult.getFieldErrors()){
-                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
+                errors.add(stringBuilder.toString());
             }
-            throw new UserNotCreatedException(stringBuilder.toString());
+            throw new UserNotCreatedException(errors.toString());
         }
         User user = modelMapper.map(userDto, User.class);
         userServiceImpl.createUser(user);
@@ -59,11 +64,13 @@ public class UserController {
     @Operation(summary = "Update user")
     public UserDto updateUser(@PathVariable("id") int id, @RequestBody @Valid UserDto userDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            StringBuilder stringBuilder = new StringBuilder();
+            List<String> errors = new ArrayList<>();
             for(FieldError fieldError : bindingResult.getFieldErrors()){
-                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
+                errors.add(stringBuilder.toString());
             }
-            throw new UserNotUpdatedException(stringBuilder.toString());
+            throw new UserNotUpdatedException(errors.toString());
         }
         User user = modelMapper.map(userDto, User.class);
         userServiceImpl.updateUser(id, user);

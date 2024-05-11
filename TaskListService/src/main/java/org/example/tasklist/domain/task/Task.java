@@ -7,6 +7,7 @@ import org.example.tasklist.domain.user.User;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -35,4 +36,5 @@ public class Task implements Serializable {
     @Column(name = "expiration_date")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime expirationDate;
+
 }

@@ -3,6 +3,7 @@ package org.example.tasklistservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.client.UserRestClient;
+import org.example.tasklistservice.exception.ErrorHandling;
 import org.example.tasklistservice.exception.UserNotFoundException;
 import org.example.tasklistservice.exception.UserNotUpdatedException;
 import org.example.tasklistservice.security.PersonDetails;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRestClient userRestClient;
+
+    private final ErrorHandling errorHandling;
 
     @GetMapping("/aboutUser")
     public String showUserById(Model model){
@@ -39,7 +42,7 @@ public class UserController {
         try {
             userRestClient.update(user, id);
         } catch (UserNotUpdatedException userNotUpdatedException){
-            model.addAttribute("error",  userNotUpdatedException.getMessage());
+            model.addAttribute("error",  errorHandling.userNotUpdatedException(userNotUpdatedException));
             return "users/update";
         }
         return "redirect:/web/user/aboutUser";
