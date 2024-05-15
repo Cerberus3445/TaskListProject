@@ -3,7 +3,6 @@ package org.example.tasklistservice.client;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
-import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.TaskNotCreatedException;
 import org.example.tasklistservice.exception.TaskNotUpdatedException;

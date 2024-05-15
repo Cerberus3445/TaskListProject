@@ -3,11 +3,7 @@ package org.example.tasklist.domain.task;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.example.tasklist.domain.user.User;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity

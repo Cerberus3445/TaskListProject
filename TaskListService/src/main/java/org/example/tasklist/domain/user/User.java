@@ -1,14 +1,8 @@
 package org.example.tasklist.domain.user;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.example.tasklist.domain.task.Task;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.validator.constraints.Length;
-
-import java.io.Serializable;
 import java.util.List;
 
 @Data

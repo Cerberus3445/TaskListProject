@@ -13,49 +13,42 @@ public class AdviceController {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBody handlerException(UserNotFoundException userNotFoundException){
-        ExceptionBody exceptionBody = new ExceptionBody(userNotFoundException.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(userNotFoundException.getMessage());
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBody handlerException(TaskNotFoundException taskNotFoundException){
-        ExceptionBody exceptionBody = new ExceptionBody(taskNotFoundException.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(taskNotFoundException.getMessage());
     }
 
     @ExceptionHandler(TaskNotCreatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerException(TaskNotCreatedException taskNotCreatedException){
-        ExceptionBody exceptionBody = new ExceptionBody(taskNotCreatedException.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(taskNotCreatedException.getMessage());
     }
 
     @ExceptionHandler(TaskNotUpdatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerException(TaskNotUpdatedException taskNotUpdatedException){
-        ExceptionBody exceptionBody = new ExceptionBody(taskNotUpdatedException.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(taskNotUpdatedException.getMessage());
     }
 
     @ExceptionHandler(UserNotCreatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerException(UserNotCreatedException userNotCreatedException){
-        ExceptionBody exceptionBody = new ExceptionBody(userNotCreatedException.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(userNotCreatedException.getMessage());
     }
 
     @ExceptionHandler(UserNotUpdatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerException(UserNotUpdatedException userNotUpdatedException){
-        ExceptionBody exceptionBody = new ExceptionBody(userNotUpdatedException.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(userNotUpdatedException.getMessage());
     }
 
     @ExceptionHandler(PasswordNotValid.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerException(PasswordNotValid passwordNotValid){
-        ExceptionBody exceptionBody = new ExceptionBody(passwordNotValid.getMessage());
-        return exceptionBody;
+        return new ExceptionBody(passwordNotValid.getMessage());
     }
 }
