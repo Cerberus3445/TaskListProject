@@ -2,16 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tasks List</title>
 </head>
 <body>
+
+<div th:if="${noTasks}">
+    <h1>Задач нет</h1>
+</div>
 
 <div th:each="task : ${tasks}">
     <a th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
 </div>
 
 <a th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
-
+<p></p>
 <a href="/web/user/aboutUser">На страницу пользователя</a>
 </body>
 </html>

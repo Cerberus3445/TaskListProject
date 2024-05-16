@@ -31,6 +31,11 @@ public class TaskController {
     @GetMapping
     public String getTasksByUserId(Model model){
         List<Task> taskDtoList = taskRestClient.getTasksByUserId(getUserId());
+
+        if(taskDtoList.isEmpty()){
+            model.addAttribute("noTasks", taskDtoList);
+        }
+
         model.addAttribute("tasks",taskDtoList);
         return "task/list";
     }

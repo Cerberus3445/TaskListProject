@@ -42,7 +42,7 @@ public class SecurityConfig {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Bean //Ставим степень кодировки, с которой кодировали пароль в базе
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.PasswordDto;
 import org.example.tasklistservice.dto.UserDto;
+import org.example.tasklistservice.exception.BadRequestException;
 import org.example.tasklistservice.exception.UserNotCreatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
 import org.example.tasklistservice.exception.UserNotUpdatedException;
@@ -61,8 +62,8 @@ public class UserRestClient {
         try {
             String url = "http://localhost:9002/api/user/" + id + "/delete";
             template.delete(url);
-        } catch (HttpClientErrorException.NotFound notFound){
-            throw new UserNotFoundException(notFound.getMessage());
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new BadRequestException();
         }
     }
 

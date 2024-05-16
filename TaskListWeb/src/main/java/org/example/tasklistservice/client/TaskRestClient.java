@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
+import org.example.tasklistservice.exception.BadRequestException;
 import org.example.tasklistservice.exception.TaskNotCreatedException;
 import org.example.tasklistservice.exception.TaskNotUpdatedException;
 import org.example.tasklistservice.exception.UserNotFoundException;
@@ -41,8 +42,8 @@ public class TaskRestClient {
             String url = "http://localhost:9002/api/user/%d/tasks".formatted(id);
             List<Task> taskList = new ArrayList<>();
             TaskDto[] taskDto = restTemplate.getForObject(url, TaskDto[].class);
-            for(int i = 0; i < taskDto.length; i++){
-                taskList.add(modelMapper.map(taskDto[i], Task.class));
+            for (TaskDto dto : taskDto) {
+                taskList.add(modelMapper.map(dto, Task.class));
             }
             return taskList;
         } catch (HttpClientErrorException.NotFound notFound){
@@ -104,8 +105,8 @@ public class TaskRestClient {
         try {
             String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
             restTemplate.delete(url);
-        } catch (HttpClientErrorException.NotFound notFound){
-            throw new UserNotFoundException("Task with this id not found");
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new BadRequestException();
         }
     }
 
