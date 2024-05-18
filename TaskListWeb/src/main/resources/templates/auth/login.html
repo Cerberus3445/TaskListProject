@@ -3,25 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="/css/auth.css" th:href="@{/css/auth.css}">
 </head>
 <body>
-<div class="da">
-    <h1>Ehf</h1>
-</div>
-<form name="f" method="post" action="/process_login">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <label for="username">Введите почту: </label>
-    <input type="text" name="username" id="username"/>
-    <br/>
-    <label for="password">Введите пароль: </label>
-    <input type="password" name="password" id="password"/>
-    <br/>
-    <input type="submit" value="Логин"/>
-    <div th:if="${param.error}" style="color: red">
-        Неправильные имя или пароль
+<div class="container">
+    <div class="screen">
+        <div class="screen__content">
+            <form class="login" name="f" method="post" action="/process_login">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="login__field">
+                    <i class="login__icon fas fa-user"></i>
+                    <input type="text" name="username" id="username" class="login__input" placeholder="User name / Email"/>
+                </div>
+                <br/>
+                <div class="login__field">
+                    <i class="login__icon fas fa-lock"></i>
+                    <input type="password" name="password" id="password" class="login__input" placeholder="Password"/>
+                </div>
+                <br/>
+                <div th:if="${param.error}" style="color: red">
+                    Неправильная почта или пароль
+                </div>
+                <button class="button login__submit">
+                    <span class="button__text">Login</span>
+                    <i class="button__icon fas fa-chevron-right"></i>
+                </button>
+            </form>
+            <div class="social-login">
+                <a href="/auth/registration">Или создайте аккаунт</a>
+                <div class="social-icons">
+                    <a href="#" class="social-login__icon fab fa-instagram"></a>
+                    <a href="#" class="social-login__icon fab fa-facebook"></a>
+                    <a href="#" class="social-login__icon fab fa-twitter"></a>
+                </div>
+            </div>
+        </div>
+        <div class="screen__background">
+            <span class="screen__background__shape screen__background__shape4"></span>
+            <span class="screen__background__shape screen__background__shape3"></span>
+            <span class="screen__background__shape screen__background__shape2"></span>
+            <span class="screen__background__shape screen__background__shape1"></span>
+        </div>
     </div>
-</form>
-
-<a href="/auth/registration">Или создаёте аккаунт</a>
+</div>
 </body>
 </html>
