@@ -3,34 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>About Task</title>
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
 </head>
 <body>
-<h1 th:text="${task.getTitle()}"></h1>
-<h1 th:text="${task.getDescription()}"></h1>
-<h1 th:text="${task.getExpirationDate()}"></h1>
-<h1 th:text="${task.getStatus()}"></h1>
+
+<div class="task_info">
+    <h1 th:text="${task.getTitle()}"></h1>
+    <h1 th:text="${task.getDescription()}"></h1>
+    <h1 th:text="${task.getExpirationDate()}"></h1>
+    <h1 th:text="${task.getStatus()}"></h1>
+
+    <a th:href="@{/web/user/aboutUser/tasks}">К списку задач</a>
+
+    <h1>Изменить статус:</h1>
+
+    <form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/status/planned(taskId=${task.getId()})}">
+        <input type="submit" value="Запланированно">
+    </form>
+    <P>
+    <form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/status/in_progress(taskId=${task.getId()})}">
+        <input type="submit" value="В процессе">
+    </form>
+    <br>
+    <form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/status/done(taskId=${task.getId()})}">
+        <input type="submit" value="Сделано">
+    </form>
+    <br>
+    <form th:method="DELETE" th:action="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}">
+        <input type="submit" value="Удалить">
+    </form>
+
+    <a th:href="@{/web/user/aboutUser/tasks/{taskId}/update(taskId=${task.getId()})}">Обновить</a>
+</div>
 
 
-<a th:href="@{/web/user/aboutUser/tasks}">К списку задач</a>
-
-<h1>Изменить статус:</h1>
-
-<form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/status/planned(taskId=${task.getId()})}">
-    <input type="submit" value="Запланированно">
-</form>
-<P>
-<form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/status/in_progress(taskId=${task.getId()})}">
-    <input type="submit" value="В процессе">
-</form>
-<br>
-<form th:method="POST" th:action="@{/web/user/aboutUser/tasks/{taskId}/status/done(taskId=${task.getId()})}">
-    <input type="submit" value="Сделано">
-</form>
-<br>
-<form th:method="DELETE" th:action="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}">
-    <input type="submit" value="Удалить">
-</form>
-
-<a th:href="@{/web/user/aboutUser/tasks/{taskId}/update(taskId=${task.getId()})}">Обновить</a>
+<div class="wrapper"></div>
 </body>
 </html>

@@ -28,3 +28,53 @@
     height: 1000px;
     background: white;
 }
+
+.update{
+    margin-top: 300px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 450px;
+    left: 750px;
+    height: 250px;
+    background: white;
+    display: flex;
+    align-items: center;
+}
+
+.update>form{
+    display:block;
+    margin:0 auto;
+}
+
+.submit_button{
+    text-align: center;
+}
+
+.submit_button_password{
+    margin: 20px;
+    text-align: center;
+}
+
+.tasks{
+    margin-top: 300px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 500px;
+    left: 750px;
+    height: 100px;
+    background: white;
+}
+
+.task_info{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}

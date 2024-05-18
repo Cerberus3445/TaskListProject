@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Update User</title>
+    <link rel="stylesheet"  href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
 </head>
 <body>
 
-<div th:list="${error}">
-    <h1 style="color: red" th:text="${error}"></h1>
+<div class="update">
+    <form th:method="POST" th:action="@{/web/user/{id}/update(id=${user.getId()})}" th:object="${user}">
+        <input type="text" th:field="*{name}" id="name" placeholder="User name">
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+        <br>
+        <input type="text" th:field="*{email}" id="email" placeholder="Email">
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+        <br>
+        <div class="submit_button"> <input type="submit" value="Обновить"> </div>
+    </form>
+    <div th:list="${error}">
+        <h1 style="color: red" th:text="${error}"></h1>
+    </div>
 </div>
 
-<form th:method="POST" th:action="@{/web/user/{id}/update(id=${user.getId()})}" th:object="${user}">
-    <label  for="name">Введите имя</label>
-    <input type="text" th:field="*{name}" id="name">
-    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-    <br>
-    <label for="email">Введите почту</label>
-    <input type="text" th:field="*{email}" id="email">
-    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-    <br>
-    <input type="submit" value="Обновить">
-</form>
-
+<div class="wrapper"></div>
 </body>
 </html>

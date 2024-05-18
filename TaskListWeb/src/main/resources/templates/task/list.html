@@ -11,12 +11,16 @@
     <h1>Задач нет</h1>
 </div>
 
-<div th:each="task : ${tasks}">
-    <a th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
+<div class="tasks">
+    <div th:each="task : ${tasks}">
+        <a th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
+    </div>
 </div>
 
 <a th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
 <p></p>
 <a href="/web/user/aboutUser">На страницу пользователя</a>
+
+<div class="wrapper"></div>
 </body>
 </html>
