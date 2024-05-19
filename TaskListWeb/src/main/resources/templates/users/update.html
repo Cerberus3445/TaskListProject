@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <title>Update User</title>
     <link rel="stylesheet"  href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/input.css" th:href="@{/css/input.css}">
 </head>
 <body>
 
 <div class="update">
     <form th:method="POST" th:action="@{/web/user/{id}/update(id=${user.getId()})}" th:object="${user}">
-        <input type="text" th:field="*{name}" id="name" placeholder="User name">
-        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <div class="form__group">
+            <input type="text" th:field="*{name}" class="form__input" id="name" placeholder="Name" required="" />
+            <label for="name" class="form__label">Имя</label>
+        </div>
         <br>
-        <input type="text" th:field="*{email}" id="email" placeholder="Email">
-        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+        <div class="form__group">
+            <input type="text" th:field="*{email}" class="form__input" id="email" placeholder="Email" required="" />
+            <label for="name" class="form__label">Почта</label>
+        </div>
         <br>
         <div class="submit_button"> <input type="submit" value="Обновить"> </div>
     </form>

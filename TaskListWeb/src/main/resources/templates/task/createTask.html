@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Task</title>
-    <link rel="stylesheet"  th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/input.css" th:href="@{/css/input.css}">
 </head>
 <body>
 
-<div th:list="${error}">
-    <h1 style="color: red" th:text="${error}"></h1>
+<div class="create_task">
+    <div th:list="${error}">
+        <h1 style="color: red" th:text="${error}"></h1>
+    </div>
+
+    <h1 style="color: gray"> Создать задачу</h1>
+    <form th:method="POST" th:action="@{/web/user/aboutUser/tasks/create}" th:object="${task}">
+
+        <div class="form__group">
+            <input type="text" th:field="*{title}" class="form__input" id="title" placeholder="Название" required="" />
+            <br>
+        </div>
+
+        <div class="form__group">
+            <input type="text" th:field="*{description}" class="form__input" id="description" placeholder="Описание" required="" />
+            <br>
+        </div>
+
+        <div class="form__group">
+            <input type="text" th:field="*{expirationDateString}" class="form__input" id="expirationDateString" placeholder="Дата" required="" />
+            <p>Дата (пример:2024-06-30 16:30). Где сначала идёт год, месяц, дата, часы, минуты</p>
+        </div>
+
+        <div class="submit_button"> <input  type="submit" value="Создать"></div>
+    </form>
 </div>
-
-<form th:method="POST" th:action="@{/web/user/aboutUser/tasks/create}" th:object="${task}">
-
-    <label for="title">Введите название задачи:</label>
-    <input type="text" th:field="*{title}" id="title">
-
-    <label for="description">Введите описание задачи:</label>
-    <input type="text" th:field="*{description}" id="description">
-
-    <label for="expirationDate">Когда задача должна быть выполненна(пример:2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты</label>
-    <input type="text" th:field="*{expirationDateString}" id="expirationDate">
-
-    <input  type="submit" value="Создать">
-</form>
 
 <div class="wrapper"></div>
 </body>

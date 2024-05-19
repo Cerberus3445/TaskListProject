@@ -25,7 +25,7 @@
     z-index: 9999;
     top: 0;
     left: 0;
-    height: 1000px;
+    height: 1150px;
     background: white;
 }
 
@@ -34,9 +34,9 @@
     position: fixed;
     z-index: 9999;
     top: 0;
-    width: 450px;
+    width: 650px;
     left: 750px;
-    height: 250px;
+    height: 450px;
     background: white;
     display: flex;
     align-items: center;
@@ -57,14 +57,15 @@
 }
 
 .tasks{
-    margin-top: 300px;
+    margin-top: 60px;
     position: fixed;
     z-index: 9999;
     top: 0;
-    width: 500px;
-    left: 750px;
-    height: 100px;
+    width: 700px;
+    left: 670px;
+    height: 650px;
     background: white;
+    text-align: center;
 }
 
 .task_info{
@@ -77,4 +78,46 @@
     height: 750px;
     background: white;
     text-align: center;
+}
+
+.noTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 670px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.create_task{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.create_task>form{
+    height: 700px;
+}
+
+.title_and_description{
+    height: 300px;
+}
+
+.title_and_description>input{
+    flex-direction: column;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.expirationDate{
+    margin-top: 300px;
 }

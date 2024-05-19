@@ -17,7 +17,7 @@ public class TaskDto {
     private int id;
 
     @Schema(description = "Task title", example = "Eat chicken")
-    @Length(min = 2, max = 20, message = "Длина названия должна составлять от 2 до 20 символов")
+    @Length(min = 2, max = 50, message = "Длина названия должна составлять от 2 до 50 символов")
     private String title;
 
     @Schema(description = "Task description", example = "Can be empty")

@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Tasks List</title>
-    <link rel="stylesheet"  th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
 </head>
 <body>
 
-<div th:if="${noTasks}">
-    <h1>Задач нет</h1>
-</div>
-
 <div class="tasks">
+    <h1 style="color: gray">Задачи</h1>
     <div th:each="task : ${tasks}">
-        <a th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
+        <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
     </div>
+
+    <a style="color: gray"th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
+    <p></p>
+    <a style="color: gray"href="/web/user/aboutUser">На страницу пользователя</a>
 </div>
 
-<a th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
-<p></p>
-<a href="/web/user/aboutUser">На страницу пользователя</a>
+<div class="noTasks" th:if="${noTasks}">
+    <h1 style="color: gray">Задач нет</h1>
+
+    <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
+    <p></p>
+    <a style="color: gray" href="/web/user/aboutUser">На страницу пользователя</a>
+</div>
 
 <div class="wrapper"></div>
 </body>
