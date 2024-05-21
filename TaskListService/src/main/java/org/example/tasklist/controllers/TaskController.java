@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklist.domain.exception.TaskNotCreatedException;
 import org.example.tasklist.domain.exception.TaskNotUpdatedException;
+import org.example.tasklist.domain.task.Status;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.dto.StatusDto;
 import org.example.tasklist.dto.TaskDto;
@@ -98,5 +99,35 @@ public class TaskController {
     public HttpStatus deleteTaskById(@PathVariable("taskId") int taskId){
         taskServiceImpl.deleteTask(taskId);
         return HttpStatus.OK;
+    }
+
+    @GetMapping("/planned")
+    @Operation(summary = "Get tasks with PLANNED status")
+    public List<TaskDto> getPlannedTask(@PathVariable("id") int userId){
+        List<TaskDto> taskDtoList = new ArrayList<>();
+        for(Task task : taskServiceImpl.getTasksByStatus(Status.PLANNED, userId)){
+            taskDtoList.add(modelMapper.map(task, TaskDto.class));
+        }
+        return taskDtoList;
+    }
+
+    @GetMapping("/in_progress")
+    @Operation(summary = "Get tasks with IN_PROGRESS status")
+    public List<TaskDto> getInProgressTask(@PathVariable("id") int userId){
+        List<TaskDto> taskDtoList = new ArrayList<>();
+        for(Task task : taskServiceImpl.getTasksByStatus(Status.IN_PROGRESS, userId)){
+            taskDtoList.add(modelMapper.map(task, TaskDto.class));
+        }
+        return taskDtoList;
+    }
+
+    @GetMapping("/done")
+    @Operation(summary = "Get tasks with DONE status")
+    public List<TaskDto> getInPlannedTask(@PathVariable("id") int userId){
+        List<TaskDto> taskDtoList = new ArrayList<>();
+        for(Task task : taskServiceImpl.getTasksByStatus(Status.DONE, userId)){
+            taskDtoList.add(modelMapper.map(task, TaskDto.class));
+        }
+        return taskDtoList;
     }
 }

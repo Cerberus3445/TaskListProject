@@ -25,6 +25,8 @@ public class TaskRestClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private final UserRestClient userRestClient;
+
     private final ModelMapper modelMapper;
 
     public Task getTask(int userId, int taskId){
@@ -34,6 +36,36 @@ public class TaskRestClient {
             return modelMapper.map(taskDto, Task.class);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("User with this id not found");
+        }
+    }
+
+    public List<Task> getDoneTasks(int userId){
+        try {
+            String url = "http://localhost:9002/api/user/%d/tasks/done".formatted(userId);
+            TaskDto[] taskDtoArray = restTemplate.getForObject(url, TaskDto[].class);
+            return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new BadRequestException();
+        }
+    }
+
+    public List<Task> getInProgressTasks(int userId){
+        try {
+            String url = "http://localhost:9002/api/user/%d/tasks/in_progress".formatted(userId);
+            TaskDto[] taskDtoArray = restTemplate.getForObject(url, TaskDto[].class);
+            return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new BadRequestException();
+        }
+    }
+
+    public List<Task> getPlannedTasks(int userId){
+        try {
+            String url = "http://localhost:9002/api/user/%d/tasks/planned".formatted(userId);
+            TaskDto[] taskDtoArray = restTemplate.getForObject(url, TaskDto[].class);
+            return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new BadRequestException();
         }
     }
 
@@ -143,5 +175,15 @@ public class TaskRestClient {
 
         LocalDateTime localDateTime = LocalDateTime.of(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
         return localDateTime;
+    }
+
+    private List<Task> fromTaskDtoArrayToTaskList(TaskDto[] taskDtoArray, int userId){
+        List<Task> taskList = new ArrayList<>();
+        for(TaskDto taskDto : taskDtoArray){
+            Task task = modelMapper.map(taskDto, Task.class);
+            task.setUser(userRestClient.getUser(userId));
+            taskList.add(task);
+        }
+        return taskList;
     }
 }

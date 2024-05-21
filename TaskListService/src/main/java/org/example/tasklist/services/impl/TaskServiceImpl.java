@@ -9,6 +9,9 @@ import org.example.tasklist.services.TaskService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -51,5 +54,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(int id){
         taskRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Task> getTasksByStatus(Status status, int userId) {
+        List<Task> taskList = userServiceImpl.getUserTasks(userServiceImpl.showUserById(userId));
+        List<Task> requiredTasks = new ArrayList<>();
+        for(Task task : taskList){
+            if(task.getStatus() == status){
+                requiredTasks.add(task);
+            }
+        }
+        return requiredTasks;
     }
 }

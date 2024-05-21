@@ -36,7 +36,11 @@ public class TaskController {
             model.addAttribute("noTasks", taskDtoList);
         }
 
-        model.addAttribute("tasks",taskDtoList);
+        model.addAttribute("doneTasks",taskRestClient.getDoneTasks(getUserId()));
+
+        model.addAttribute("plannedTasks",taskRestClient.getPlannedTasks(getUserId()));
+
+        model.addAttribute("inProgressTasks",taskRestClient.getInProgressTasks(getUserId()));
         return "task/list";
     }
 

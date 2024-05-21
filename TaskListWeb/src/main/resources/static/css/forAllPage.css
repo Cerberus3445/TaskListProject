@@ -21,12 +21,23 @@
 }
 
 .info{
+    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 0;
-    left: 0;
-    height: 1150px;
+    top: 40px;
+    width: 1000px;
+    left: 590px;
+    height: 750px;
     background: white;
+    text-align: center;
+}
+
+.info>h1{
+    color: gray;
+}
+
+.info>p{
+    color: gray;
 }
 
 .update{
@@ -56,13 +67,37 @@
     text-align: center;
 }
 
-.tasks{
+.doneTasks{
     margin-top: 60px;
     position: fixed;
     z-index: 9999;
     top: 0;
-    width: 700px;
+    width: 650px;
+    right: 0;
+    height: 650px;
+    background: white;
+    text-align: center;
+}
+
+.inProgressTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
     left: 670px;
+    height: 650px;
+    background: white;
+    text-align: center;
+}
+
+.plannedTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 650px;
+    left: 0px;
     height: 650px;
     background: white;
     text-align: center;
@@ -78,6 +113,10 @@
     height: 750px;
     background: white;
     text-align: center;
+}
+
+.task_info>h1{
+    color: gray;
 }
 
 .noTasks{
