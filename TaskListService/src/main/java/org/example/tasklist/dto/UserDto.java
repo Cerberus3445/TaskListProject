@@ -25,4 +25,7 @@ public class UserDto {
     @Schema(description = "User password", example = "dasdasdafSDsdfkdsfj")
     @Size(min = 5, max = 120, message = "Длина пароля должен составлять от 5 до 120 символов")
     private String password;
+
+    @Schema(description = "User role", example = "USER, ADMIN")
+    private String role;
 }

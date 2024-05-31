@@ -47,6 +47,7 @@ public class UserRestClient {
         map.put("name", user.getName());
         map.put("email", user.getEmail());
         map.put("password", passwordEncoder.encode(user.getPassword()));
+        map.put("role", "ROLE_USER");
         create(map);
     }
 
@@ -57,6 +58,7 @@ public class UserRestClient {
         map.put("name", user.getName());
         map.put("email", user.getEmail());
         map.put("password", thisUser.getPassword());
+        map.put("role", thisUser.getRole()); //с модели приходит без роли
         update(map, user.getId());
     }
 

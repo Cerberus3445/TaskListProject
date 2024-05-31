@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user){
+        user.setRole("ROLE_USER");
         User user1 = userRepository.save(user);
         mailServiceImpl.sendEmail(user, MailType.REGISTRATION, new Properties());
         return user1;

@@ -27,8 +27,10 @@ public class SecurityConfig {
                 .permitAll()
                         .requestMatchers("/css/**")
                         .permitAll()
+                        .requestMatchers("/admin")
+                        .hasRole("ADMIN")
                 .anyRequest()
-                .authenticated())
+                .hasAnyRole("ADMIN", "USER"))
                 .formLogin(login -> login.
                         loginPage("/auth/login")
                         .loginProcessingUrl("/process_login")
