@@ -1,6 +1,7 @@
 package org.example.tasklistservice.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.tasklistservice.client.QuoteRestClient;
 import org.example.tasklistservice.client.TaskRestClient;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
@@ -24,6 +25,8 @@ public class TaskController {
 
     private final TaskRestClient taskRestClient;
 
+    private final QuoteRestClient quoteRestClient;
+
     private final ModelMapper modelMapper;
 
     private final ErrorHandling errorHandling;
@@ -34,13 +37,14 @@ public class TaskController {
 
         if(taskDtoList.isEmpty()){
             model.addAttribute("noTasks", taskDtoList);
+        } else {
+            model.addAttribute("doneTasks",taskRestClient.getDoneTasks(getUserId()));
+
+            model.addAttribute("plannedTasks",taskRestClient.getPlannedTasks(getUserId()));
+
+            model.addAttribute("inProgressTasks",taskRestClient.getInProgressTasks(getUserId()));
         }
-
-        model.addAttribute("doneTasks",taskRestClient.getDoneTasks(getUserId()));
-
-        model.addAttribute("plannedTasks",taskRestClient.getPlannedTasks(getUserId()));
-
-        model.addAttribute("inProgressTasks",taskRestClient.getInProgressTasks(getUserId()));
+        model.addAttribute("quote", quoteRestClient.getRandomQuotes());
         return "task/list";
     }
 

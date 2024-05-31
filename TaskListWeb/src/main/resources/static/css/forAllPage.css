@@ -160,3 +160,17 @@
 .expirationDate{
     margin-top: 300px;
 }
+
+.quote{
+    width: 750px;
+    height: 80px;
+    background: ghostwhite;
+    border-radius: 10px;
+    margin-top: 900px;
+    margin-left: 689px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    display: inline-block;
+    text-align: center;
+}
