@@ -5,12 +5,16 @@ import org.example.tasklistservice.domain.quote.Quote;
 import org.example.tasklistservice.dto.QuoteDto;
 import org.example.tasklistservice.exception.QuoteNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Component
@@ -40,7 +44,7 @@ public class QuoteRestClient {
     public List<Quote> getQuotes(){
         try {
             String url = "http://localhost:9002/api/quotes";
-            QuoteDto[] quoteDtoArray = restTemplate.getForObject(url, QuoteDto[].class);
+            QuoteDto[] quoteDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), QuoteDto[].class).getBody();
             List<Quote> quoteList = new ArrayList<>();
             for(QuoteDto quoteDto : quoteDtoArray){
                 quoteList.add(modelMapper.map(quoteDto, Quote.class));
@@ -49,5 +53,12 @@ public class QuoteRestClient {
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
             throw new QuoteNotFoundException(notFound.getMessage());
         }
+    }
+
+    private HttpEntity<Objects> returnHttpHeadersWithBasicAuthForGetRequest(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+        HttpEntity<Objects> http = new HttpEntity<>(headers);
+        return http;
     }
 }

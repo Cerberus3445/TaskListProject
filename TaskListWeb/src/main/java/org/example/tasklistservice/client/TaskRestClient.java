@@ -11,6 +11,7 @@ import org.example.tasklistservice.exception.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -32,7 +33,7 @@ public class TaskRestClient {
     public Task getTask(int userId, int taskId){
         try {
             String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
-            TaskDto taskDto = restTemplate.getForObject(url, TaskDto.class);
+            TaskDto taskDto = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto.class).getBody();
             return modelMapper.map(taskDto, Task.class);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException("User with this id not found");
@@ -42,7 +43,7 @@ public class TaskRestClient {
     public List<Task> getDoneTasks(int userId){
         try {
             String url = "http://localhost:9002/api/user/%d/tasks/done".formatted(userId);
-            TaskDto[] taskDtoArray = restTemplate.getForObject(url, TaskDto[].class);
+            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
             return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new BadRequestException();
@@ -52,7 +53,7 @@ public class TaskRestClient {
     public List<Task> getInProgressTasks(int userId){
         try {
             String url = "http://localhost:9002/api/user/%d/tasks/in_progress".formatted(userId);
-            TaskDto[] taskDtoArray = restTemplate.getForObject(url, TaskDto[].class);
+            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
             return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new BadRequestException();
@@ -62,7 +63,7 @@ public class TaskRestClient {
     public List<Task> getPlannedTasks(int userId){
         try {
             String url = "http://localhost:9002/api/user/%d/tasks/planned".formatted(userId);
-            TaskDto[] taskDtoArray = restTemplate.getForObject(url, TaskDto[].class);
+            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
             return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new BadRequestException();
@@ -73,8 +74,8 @@ public class TaskRestClient {
         try {
             String url = "http://localhost:9002/api/user/%d/tasks".formatted(id);
             List<Task> taskList = new ArrayList<>();
-            TaskDto[] taskDto = restTemplate.getForObject(url, TaskDto[].class);
-            for (TaskDto dto : taskDto) {
+            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
+            for (TaskDto dto : taskDtoArray) {
                 taskList.add(modelMapper.map(dto, Task.class));
             }
             return taskList;
@@ -108,6 +109,7 @@ public class TaskRestClient {
             Map<String, String> map = formatTaskDtoToJson(taskDto);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            httpHeaders.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
             HttpEntity<Object> request = new HttpEntity<>(map, httpHeaders);
             restTemplate.postForObject(url, request, String.class);
         } catch (HttpClientErrorException.NotFound notFound){
@@ -124,6 +126,7 @@ public class TaskRestClient {
             Map<String, String> map = formatTaskDtoToJson(taskDto);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            httpHeaders.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
             HttpEntity<Object> request = new HttpEntity<>(map, httpHeaders);
             restTemplate.postForObject(url, request, String.class);
         } catch (HttpClientErrorException.NotFound notFound){
@@ -136,18 +139,22 @@ public class TaskRestClient {
     public void deleteTask(int userId, int taskId){
         try {
             String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
-            restTemplate.delete(url);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+            HttpEntity<Objects> http = new HttpEntity<>(headers);
+            restTemplate.exchange(url, HttpMethod.DELETE, http, String.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new BadRequestException();
         }
     }
 
     public void setTaskStatus(int userId, int taskId, Status status){
-        Map<String, String> map = new HashMap<>();
         try {
-            map.put("status", status.toString());
             String url = "http://localhost:9002/api/user/%d/tasks/%d/status".formatted(userId, taskId);
-            restTemplate.postForObject(url, map, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+            HttpEntity<Object> http = new HttpEntity<>(status, headers);
+            restTemplate.postForObject(url, http, String.class);
         } catch (Exception e){
 
         }
@@ -185,5 +192,12 @@ public class TaskRestClient {
             taskList.add(task);
         }
         return taskList;
+    }
+
+    private HttpEntity<Objects> returnHttpHeadersWithBasicAuthForGetRequest(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+        HttpEntity<Objects> http = new HttpEntity<>(headers);
+        return http;
     }
 }

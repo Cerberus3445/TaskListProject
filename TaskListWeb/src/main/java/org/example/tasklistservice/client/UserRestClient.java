@@ -11,6 +11,7 @@ import org.example.tasklistservice.exception.UserNotUpdatedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -32,7 +34,7 @@ public class UserRestClient {
     public User getUser(int id){
         try {
             String url = "http://localhost:9002/api/user/" + id;
-            UserDto user = template.getForObject(url, UserDto.class);
+            UserDto user = template.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), UserDto.class).getBody();
             return modelMapper.map(user, User.class);
         } catch (HttpClientErrorException.NotFound notFound){
             throw new UserNotFoundException(notFound.getMessage());
@@ -61,7 +63,7 @@ public class UserRestClient {
     public void deleteUser(int id){
         try {
             String url = "http://localhost:9002/api/user/" + id + "/delete";
-            template.delete(url);
+            template.exchange(url, HttpMethod.DELETE, returnHttpHeadersWithBasicAuthForGetRequest(), String.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new BadRequestException();
         }
@@ -71,6 +73,7 @@ public class UserRestClient {
         try {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            httpHeaders.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
             String url = "http://localhost:9002/api/user";
             template.postForObject(url, request, UserDto.class);
@@ -83,6 +86,7 @@ public class UserRestClient {
         try {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            httpHeaders.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
             HttpEntity<Object> request = new HttpEntity<>(hashmap, httpHeaders);
             String url = "http://localhost:9002/api/user/%d/update".formatted(userId);
             template.postForObject(url, request, UserDto.class);
@@ -94,7 +98,7 @@ public class UserRestClient {
     public User findByEmail(String username) {
         try {
             String url = "http://localhost:9002/api/user/byEmail?email=" + username;
-            UserDto user = template.getForObject(url, UserDto.class);
+            UserDto user = template.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), UserDto.class).getBody();
             return modelMapper.map(user, User.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new UserNotUpdatedException(badRequest.getMessage());
@@ -105,9 +109,19 @@ public class UserRestClient {
         try {
             String url = "http://localhost:9002/api/user/%d/updatePassword".formatted(id);
             PasswordDto passwordDto = new PasswordDto(passwordEncoder.encode(password));
-            template.postForObject(url,passwordDto, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+            HttpEntity<Object> http = new HttpEntity<>(passwordDto, headers);
+            template.postForObject(url,http, String.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
             throw new UserNotUpdatedException(badRequest.getMessage());
         }
+    }
+
+    private HttpEntity<Objects> returnHttpHeadersWithBasicAuthForGetRequest(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+        HttpEntity<Objects> http = new HttpEntity<>(headers);
+        return http;
     }
 }
