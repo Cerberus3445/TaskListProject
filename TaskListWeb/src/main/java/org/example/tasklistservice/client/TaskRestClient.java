@@ -3,6 +3,7 @@ package org.example.tasklistservice.client;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
+import org.example.tasklistservice.dto.StatusDto;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.BadRequestException;
 import org.example.tasklistservice.exception.TaskNotCreatedException;
@@ -150,10 +151,11 @@ public class TaskRestClient {
 
     public void setTaskStatus(int userId, int taskId, Status status){
         try {
+            StatusDto statusDto = new StatusDto(status);
             String url = "http://localhost:9002/api/user/%d/tasks/%d/status".formatted(userId, taskId);
             HttpHeaders headers = new HttpHeaders();
             headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-            HttpEntity<Object> http = new HttpEntity<>(status, headers);
+            HttpEntity<Object> http = new HttpEntity<>(statusDto, headers);
             restTemplate.postForObject(url, http, String.class);
         } catch (Exception e){
 
@@ -180,8 +182,25 @@ public class TaskRestClient {
             }
         }
 
-        LocalDateTime localDateTime = LocalDateTime.of(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
-        return localDateTime;
+        return LocalDateTime.of(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
+    }
+
+    public String formatTaskStatusToString(Status status){
+        switch (status){
+            case DONE -> {
+                return "СДЕЛАНО";
+            } case PLANNED -> {
+                return "ЗАПЛАНИРОВАННО";
+            } case IN_PROGRESS -> {
+                return "В ПРОЦЕССЕ";
+            }default -> {
+                return "ОШИБКА";
+            }
+        }
+    }
+
+    public String formatDateToString(LocalDateTime localDateTime){
+        return localDateTime.toString().replace("T", " ");
     }
 
     private List<Task> fromTaskDtoArrayToTaskList(TaskDto[] taskDtoArray, int userId){

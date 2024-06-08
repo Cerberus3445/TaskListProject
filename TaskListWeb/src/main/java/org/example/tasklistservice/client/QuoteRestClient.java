@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.quote.Quote;
 import org.example.tasklistservice.dto.QuoteDto;
 import org.example.tasklistservice.exception.QuoteNotFoundException;
+import org.example.tasklistservice.exception.QuoteNotUpdatedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -28,10 +26,46 @@ public class QuoteRestClient {
     public Quote getQuoteById(int id){
         try {
             String url = "http://localhost:9002/api/quotes/%d".formatted(id);
-            QuoteDto quoteDto = restTemplate.getForObject(url, QuoteDto.class);
+            QuoteDto quoteDto = restTemplate.exchange(url,HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), QuoteDto.class).getBody();
             return modelMapper.map(quoteDto, Quote.class);
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
             throw new QuoteNotFoundException(notFound.getMessage());
+        }
+    }
+
+    public void createQuote(Quote quote){
+        try {
+            String url = "http://localhost:9002/api/quotes/create";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+            QuoteDto quoteDto = modelMapper.map(quote, QuoteDto.class);
+            HttpEntity<Object> http = new HttpEntity<>(toJson(quoteDto), headers);
+            restTemplate.exchange(url, HttpMethod.POST, http, QuoteDto.class).getBody();
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            //TODO
+        }
+    }
+
+    public void deleteQuote(int id){
+        try {
+            String url = "http://localhost:9002/api/quotes/%d/delete".formatted(id);
+             restTemplate.exchange(url,HttpMethod.DELETE, returnHttpHeadersWithBasicAuthForGetRequest(), String.class);
+        } catch (HttpClientErrorException.BadRequest.NotFound notFound){
+            throw new QuoteNotFoundException(notFound.getMessage());
+        }
+    }
+
+    public Quote updateQuote(int id, Quote quote){
+        try {
+            String url = "http://localhost:9002/api/quotes/%d/update".formatted(id);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
+            QuoteDto quoteDto = modelMapper.map(quote, QuoteDto.class);
+            HttpEntity<Object> http = new HttpEntity<>(toJson(quoteDto), headers);
+           QuoteDto updatedQuoteDto =  restTemplate.exchange(url, HttpMethod.POST, http, QuoteDto.class).getBody();
+           return modelMapper.map(updatedQuoteDto, Quote.class);
+        } catch (HttpClientErrorException.BadRequest badRequest){
+            throw new QuoteNotUpdatedException(badRequest.getMessage());
         }
     }
 
@@ -58,7 +92,13 @@ public class QuoteRestClient {
     private HttpEntity<Objects> returnHttpHeadersWithBasicAuthForGetRequest(){
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-        HttpEntity<Objects> http = new HttpEntity<>(headers);
-        return http;
+        return new HttpEntity<>(headers);
+    }
+
+    private Map<String, String> toJson(QuoteDto quoteDto){
+        Map<String, String> map = new HashMap<>();
+        map.put("text", quoteDto.getText());
+        map.put("author", quoteDto.getAuthor());
+        return map;
     }
 }

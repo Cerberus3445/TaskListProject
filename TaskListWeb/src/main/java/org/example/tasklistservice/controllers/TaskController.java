@@ -50,8 +50,11 @@ public class TaskController {
 
     @GetMapping("/{taskId}")
     public String getTaskById(@PathVariable("taskId") int taskId, Model model){
-        model.addAttribute("task", taskRestClient.getTask(getUserId(), taskId));
-        model.addAttribute("status", taskRestClient.allStatus());
+        Task task = taskRestClient.getTask(getUserId(), taskId);
+        model.addAttribute("task", task);
+        model.addAttribute("user_status", taskRestClient.formatTaskStatusToString(task.getStatus()));
+        model.addAttribute("time", taskRestClient.formatDateToString(task.getExpirationDate()));
+        model.addAttribute("status", taskRestClient.allStatus()); //добавляем все статусы, чтобы с модели приходил определенный статус
         return "task/aboutTask";
     }
 
