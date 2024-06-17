@@ -31,3 +31,4 @@ services:
     build: ./TaskListWeb
     ports:
       - "9090:9090"
+#не работает, переделать
