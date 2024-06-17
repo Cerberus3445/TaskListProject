@@ -1,5 +1,4 @@
 package org.example.tasklist.services.impl;
-
 import freemarker.template.Configuration;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +6,11 @@ import lombok.SneakyThrows;
 import org.example.tasklist.domain.MailType;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.services.MailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +23,8 @@ public class MailServiceImpl implements MailService {
     private final Configuration configuration;
 
     private final JavaMailSender mailSender;
+
+    private Logger logger = LoggerFactory.getLogger(MailServiceImpl.class);
 
     @Override
     public void sendEmail(User user, MailType type, Properties params){

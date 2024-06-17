@@ -9,6 +9,8 @@ import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.PasswordDto;
 import org.example.tasklist.repositories.UserRepository;
 import org.example.tasklist.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final MailServiceImpl mailServiceImpl;
 
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public User getUser(int id){

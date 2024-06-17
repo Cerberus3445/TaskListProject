@@ -6,6 +6,8 @@ import org.example.tasklist.domain.task.Status;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.repositories.TaskRepository;
 import org.example.tasklist.services.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    private Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     @Override
     public Task createTask(int userId, Task task){

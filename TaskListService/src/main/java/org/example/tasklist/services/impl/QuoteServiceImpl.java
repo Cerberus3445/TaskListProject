@@ -5,6 +5,8 @@ import org.example.tasklist.domain.exception.QuoteNotFoundException;
 import org.example.tasklist.domain.quote.Quote;
 import org.example.tasklist.repositories.QuoteRepository;
 import org.example.tasklist.services.QuoteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.List;
 public class QuoteServiceImpl implements QuoteService {
 
     private final QuoteRepository quoteRepository;
+
+    private Logger logger = LoggerFactory.getLogger(QuoteServiceImpl.class);
 
     @Override
     public Quote createQuote(Quote quote) {
