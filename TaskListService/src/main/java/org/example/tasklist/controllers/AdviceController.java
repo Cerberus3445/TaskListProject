@@ -22,45 +22,22 @@ public class AdviceController {
         return new ExceptionBody(taskNotFoundException.getMessage());
     }
 
-    @ExceptionHandler(TaskNotCreatedException.class)
+    @ExceptionHandler(TaskException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(TaskNotCreatedException taskNotCreatedException){
-        return new ExceptionBody(taskNotCreatedException.getMessage());
+    public ExceptionBody handlerException(TaskException taskException){
+        return new ExceptionBody(taskException.getMessage());
     }
 
-    @ExceptionHandler(TaskNotUpdatedException.class)
+
+    @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(TaskNotUpdatedException taskNotUpdatedException){
-        return new ExceptionBody(taskNotUpdatedException.getMessage());
+    public ExceptionBody handlerException(UserException userException){
+        return new ExceptionBody(userException.getMessage());
     }
 
-    @ExceptionHandler(UserNotCreatedException.class)
+    @ExceptionHandler(QuoteException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(UserNotCreatedException userNotCreatedException){
-        return new ExceptionBody(userNotCreatedException.getMessage());
-    }
-
-    @ExceptionHandler(UserNotUpdatedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(UserNotUpdatedException userNotUpdatedException){
-        return new ExceptionBody(userNotUpdatedException.getMessage());
-    }
-
-    @ExceptionHandler(PasswordNotValid.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(PasswordNotValid passwordNotValid){
-        return new ExceptionBody(passwordNotValid.getMessage());
-    }
-
-    @ExceptionHandler(QuoteNotCreatedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(QuoteNotCreatedException quoteNotCreatedException){
-        return new ExceptionBody(quoteNotCreatedException.getMessage());
-    }
-
-    @ExceptionHandler(QuoteNotUpdatedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerException(QuoteNotUpdatedException quoteNotUpdatedException){
-        return new ExceptionBody(quoteNotUpdatedException.getMessage());
+    public ExceptionBody handlerException(QuoteException quoteException){
+        return new ExceptionBody(quoteException.getMessage());
     }
 }

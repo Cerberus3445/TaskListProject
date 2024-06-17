@@ -23,8 +23,7 @@ public class PersonDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User person = userRestClient.findByEmail(username);
 
-        if (person == null)
-            throw new UsernameNotFoundException("User not found");
+        if (person == null) throw new UsernameNotFoundException("User not found");
 
         return new PersonDetails(person);
     }

@@ -6,12 +6,14 @@ import org.example.tasklist.domain.MailType;
 import org.example.tasklist.domain.exception.UserNotFoundException;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.domain.user.User;
+import org.example.tasklist.dto.PasswordDto;
 import org.example.tasklist.repositories.UserRepository;
 import org.example.tasklist.services.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 @Service
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User showUserById(int id){
+    public User getUser(int id){
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
@@ -60,9 +62,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(int id, String password) {
-        User user = showUserById(id);
-        user.setPassword(password);
+    public void updatePassword(int id, PasswordDto password) {
+        Optional<User> user = userRepository.findById(id);
+        user.get().setPassword(password.getPassword());
     }
 
 }

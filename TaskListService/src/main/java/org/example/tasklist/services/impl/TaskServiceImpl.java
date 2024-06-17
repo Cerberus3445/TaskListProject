@@ -24,7 +24,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(int userId, Task task){
-        task.setUser(userServiceImpl.showUserById(userId));
+        task.setUser(userServiceImpl.getUser(userId));
+        task.setStatus(Status.PLANNED);
         Task createdTask = taskRepository.save(task);
         return createdTask;
     }
@@ -58,7 +59,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getTasksByStatus(Status status, int userId) {
-        List<Task> taskList = userServiceImpl.getUserTasks(userServiceImpl.showUserById(userId));
+        List<Task> taskList = userServiceImpl.getUserTasks(userServiceImpl.getUser(userId));
         List<Task> requiredTasks = new ArrayList<>();
         for(Task task : taskList){
             if(task.getStatus() == status){

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ErrorHandling {
 
-    public String taskNotUpdateException(TaskNotUpdatedException taskNotUpdatedException){
-        String string = taskNotUpdatedException.getMessage();
+    public String handleTaskException(TaskException taskException){
+        String string = taskException.getMessage();
         string = string.replace("title", "Название");
         string = string.replace("expirationDate", "Дата истечения срока");
         string = string.replace("description", "Описание");
@@ -14,29 +14,11 @@ public class ErrorHandling {
         return string;
     }
 
-    public String taskNotCreatedException(TaskNotCreatedException taskNotCreatedException){
-        String string = taskNotCreatedException.getMessage();
-        string = string.replace("title", "Название");
-        string = string.replace("expirationDate", "Дата истечения срока");
-        string = string.replace("description", "Описание");
-        string = removeEverythingUnnecessary(string);
-        return string;
-    }
-
-    public String userNotCreatedException(UserNotCreatedException userNotCreatedException){
-        String string = userNotCreatedException.getMessage();
+    public String handleUserException(UserException userException){
+        String string = userException.getMessage();
         string = string.replace("name", "Имя");
         string = string.replace("email", "Email");
         string = string.replace("password", "Паролт");
-        string = removeEverythingUnnecessary(string);
-        return string;
-    }
-
-    public String userNotUpdatedException(UserNotUpdatedException userNotUpdatedException){
-        String string = userNotUpdatedException.getMessage();
-        string = string.replace("title", "Название");
-        string = string.replace("expirationDate", "Дата истечения срока");
-        string = string.replace("description", "Описание");
         string = removeEverythingUnnecessary(string);
         return string;
     }

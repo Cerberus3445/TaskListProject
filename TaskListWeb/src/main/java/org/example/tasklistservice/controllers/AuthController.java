@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.client.UserRestClient;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.exception.ErrorHandling;
-import org.example.tasklistservice.exception.UserNotCreatedException;
+import org.example.tasklistservice.exception.UserException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +21,7 @@ public class AuthController {
 
     private final ErrorHandling errorHandling;
 
+
     @GetMapping("/registration")
     public String createUserPage(Model model){
         model.addAttribute("user", new User());
@@ -32,8 +33,8 @@ public class AuthController {
         try {
             userRestClient.createUser(user);
             return "auth/login";
-        } catch (UserNotCreatedException userNotCreatedException){
-            model.addAttribute("errors", errorHandling.userNotCreatedException(userNotCreatedException));
+        } catch (UserException userException){
+            model.addAttribute("errors", errorHandling.handleUserException(userException));
             return "auth/registration";
         }
     }

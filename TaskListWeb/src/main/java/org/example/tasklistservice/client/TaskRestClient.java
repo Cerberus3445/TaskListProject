@@ -1,23 +1,17 @@
 package org.example.tasklistservice.client;
-
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
-import org.example.tasklistservice.dto.StatusDto;
 import org.example.tasklistservice.dto.TaskDto;
-import org.example.tasklistservice.exception.BadRequestException;
-import org.example.tasklistservice.exception.TaskNotCreatedException;
-import org.example.tasklistservice.exception.TaskNotUpdatedException;
-import org.example.tasklistservice.exception.UserNotFoundException;
+import org.example.tasklistservice.exception.TaskException;
+import org.example.tasklistservice.exception.UserException;
+import org.example.tasklistservice.proxy.FeignProxy;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,140 +19,108 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TaskRestClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-
     private final UserRestClient userRestClient;
+
+    private final Logger logger = LoggerFactory.getLogger(TaskRestClient.class);
+
+    private final FeignProxy feignProxy;
 
     private final ModelMapper modelMapper;
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public Task getTask(int userId, int taskId){
+        logger.info("Get task where userId = %d and taskId = %d".formatted(userId, taskId));
         try {
-            String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
-            TaskDto taskDto = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto.class).getBody();
+            TaskDto taskDto = feignProxy.getTask(userId, taskId);
             return modelMapper.map(taskDto, Task.class);
-        } catch (HttpClientErrorException.NotFound notFound){
-            throw new UserNotFoundException("User with this id not found");
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getDoneTasks(int userId){
+        logger.info("Get task with DONE status userId = %d".formatted(userId));
         try {
-            String url = "http://localhost:9002/api/user/%d/tasks/done".formatted(userId);
-            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
-            return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
-        } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new BadRequestException();
+            List<TaskDto> taskDtoList = feignProxy.getTasksWithDoneStatus(userId);
+            return fromTaskDtoArrayToTaskList(taskDtoList, userId);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getInProgressTasks(int userId){
+        logger.info("Get task with IN_PROGRESS status userId = %d".formatted(userId));
         try {
-            String url = "http://localhost:9002/api/user/%d/tasks/in_progress".formatted(userId);
-            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
-            return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
-        } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new BadRequestException();
+            List<TaskDto> taskDtoList = feignProxy.getTasksWithInProgressStatus(userId);
+            return fromTaskDtoArrayToTaskList(taskDtoList, userId);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getPlannedTasks(int userId){
+        logger.info("Get task with PLANNED status userId = %d".formatted(userId));
         try {
-            String url = "http://localhost:9002/api/user/%d/tasks/planned".formatted(userId);
-            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
-            return fromTaskDtoArrayToTaskList(taskDtoArray, userId);
-        } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new BadRequestException();
+            List<TaskDto> taskDtoList = feignProxy.getTasksWithPlannedStatus(userId);
+            return fromTaskDtoArrayToTaskList(taskDtoList, userId);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getTasksByUserId(int id){
+        logger.info("Get tasks with id %d".formatted(id));
         try {
-            String url = "http://localhost:9002/api/user/%d/tasks".formatted(id);
-            List<Task> taskList = new ArrayList<>();
-            TaskDto[] taskDtoArray = restTemplate.exchange(url, HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), TaskDto[].class).getBody();
-            for (TaskDto dto : taskDtoArray) {
-                taskList.add(modelMapper.map(dto, Task.class));
-            }
-            return taskList;
-        } catch (HttpClientErrorException.NotFound notFound){
-            throw new UserNotFoundException("User with this id not found");
+            List<TaskDto> taskDtoList = feignProxy.getTasksList(id);
+            return fromTaskDtoArrayToTaskList(taskDtoList, id);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
-    public Map<String, String> formatTaskDtoToJson(TaskDto taskDto){
-        Map<String, String> map = new HashMap<>();
-        map.put("id", String.valueOf(taskDto.getId()));
-        map.put("title", taskDto.getTitle());
-        map.put("description", taskDto.getDescription());
-        map.put("expirationDate", taskDto.getExpirationDate().toString().replace("T", " "));
-        map.put("status", taskDto.getStatus().toString());
-        return map;
-    }
-
-    public List<Status> allStatus(){
-        List<Status> statusList = new ArrayList<>();
-        statusList.add(Status.PLANNED);
-        statusList.add(Status.IN_PROGRESS);
-        statusList.add(Status.DONE);
-        return statusList;
-    }
-
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void createTask(int userId, TaskDto taskDto){
+        logger.info("Create task " + taskDto.toString() + "where userId  = %d".formatted(userId));
         try {
-            taskDto.setStatus(Status.PLANNED);
-            String url = "http://localhost:9002/api/user/%d/tasks/create".formatted(userId);
-            Map<String, String> map = formatTaskDtoToJson(taskDto);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-            httpHeaders.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-            HttpEntity<Object> request = new HttpEntity<>(map, httpHeaders);
-            restTemplate.postForObject(url, request, String.class);
-        } catch (HttpClientErrorException.NotFound notFound){
-            throw new UserNotFoundException("User with this id not found");
-        } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new TaskNotCreatedException(badRequest.getMessage());
+            feignProxy.createTask(userId, taskDto);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
-    public void updateTask(int userId, TaskDto taskDto){
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
+    public void updateTask(int userId, int taskId, TaskDto taskDto){
+        logger.info("Update task " + taskDto.toString() + "where userId = %d and taskId = %d".formatted(userId, taskId));
         try {
-            taskDto.setStatus(Status.PLANNED);
-            String url = "http://localhost:9002/api/user/%d/tasks/%d/update".formatted(userId, taskDto.getId());
-            Map<String, String> map = formatTaskDtoToJson(taskDto);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-            httpHeaders.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-            HttpEntity<Object> request = new HttpEntity<>(map, httpHeaders);
-            restTemplate.postForObject(url, request, String.class);
-        } catch (HttpClientErrorException.NotFound notFound){
-            throw new UserNotFoundException("User or task with this id not found");
-        } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new TaskNotUpdatedException(badRequest.getMessage());
+            Task task = getTask(userId, taskId);
+            taskDto.setStatus(task.getStatus());
+            feignProxy.updateTask(userId, taskId, taskDto);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void deleteTask(int userId, int taskId){
+        logger.info("Delete task where userId = %d and taskId = %d".formatted(userId, taskId));
         try {
-            String url = "http://localhost:9002/api/user/%d/tasks/%d".formatted(userId, taskId);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-            HttpEntity<Objects> http = new HttpEntity<>(headers);
-            restTemplate.exchange(url, HttpMethod.DELETE, http, String.class);
-        } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new BadRequestException();
+            feignProxy.deleteTask(userId, taskId);
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void setTaskStatus(int userId, int taskId, Status status){
+        logger.info("Set task status with id = %d ".formatted(taskId) + status.toString());
         try {
-            StatusDto statusDto = new StatusDto(status);
-            String url = "http://localhost:9002/api/user/%d/tasks/%d/status".formatted(userId, taskId);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-            HttpEntity<Object> http = new HttpEntity<>(statusDto, headers);
-            restTemplate.postForObject(url, http, String.class);
-        } catch (Exception e){
-
+            feignProxy.changeStatus(userId, taskId, status.toString());
+        } catch (FeignException e){
+            throw new TaskException(e.getMessage());
         }
     }
 
@@ -203,7 +165,7 @@ public class TaskRestClient {
         return localDateTime.toString().replace("T", " ");
     }
 
-    private List<Task> fromTaskDtoArrayToTaskList(TaskDto[] taskDtoArray, int userId){
+    private List<Task> fromTaskDtoArrayToTaskList(List<TaskDto> taskDtoArray, int userId){
         List<Task> taskList = new ArrayList<>();
         for(TaskDto taskDto : taskDtoArray){
             Task task = modelMapper.map(taskDto, Task.class);
@@ -213,10 +175,11 @@ public class TaskRestClient {
         return taskList;
     }
 
-    private HttpEntity<Objects> returnHttpHeadersWithBasicAuthForGetRequest(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth("taskListService", "asfjsf82fdwsufhao12");
-        HttpEntity<Objects> http = new HttpEntity<>(headers);
-        return http;
+    public List<Status> allStatus(){
+        List<Status> statusList = new ArrayList<>();
+        statusList.add(Status.PLANNED);
+        statusList.add(Status.IN_PROGRESS);
+        statusList.add(Status.DONE);
+        return statusList;
     }
 }

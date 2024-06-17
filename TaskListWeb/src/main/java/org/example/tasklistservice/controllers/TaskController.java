@@ -7,8 +7,7 @@ import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.ErrorHandling;
-import org.example.tasklistservice.exception.TaskNotCreatedException;
-import org.example.tasklistservice.exception.TaskNotUpdatedException;
+import org.example.tasklistservice.exception.TaskException;
 import org.example.tasklistservice.security.PersonDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -77,9 +76,9 @@ public class TaskController {
         taskDto.setId(taskId);
         try {
             taskDto.setExpirationDate(taskRestClient.formatStringToLocalDataTime(taskDto.getExpirationDateString()));
-            taskRestClient.updateTask(getUserId(), taskDto);
-        } catch (TaskNotUpdatedException taskNotUpdatedException){
-            model.addAttribute("error", errorHandling.taskNotUpdateException(taskNotUpdatedException));
+            taskRestClient.updateTask(getUserId(),taskId, taskDto);
+        } catch (TaskException taskException){
+            model.addAttribute("error", errorHandling.handleTaskException(taskException));
             return "task/updateTask";
         } catch (NumberFormatException e){
             model.addAttribute("error", "Формат даты некорректен. Правильный формат: 2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты");
@@ -93,8 +92,8 @@ public class TaskController {
        try {
            taskDto.setExpirationDate(taskRestClient.formatStringToLocalDataTime(taskDto.getExpirationDateString()));
            taskRestClient.createTask(getUserId(), taskDto);
-       } catch (TaskNotCreatedException taskNotCreatedException){
-            model.addAttribute("error", errorHandling.taskNotCreatedException(taskNotCreatedException));
+       } catch (TaskException taskException){
+            model.addAttribute("error", errorHandling.handleTaskException(taskException));
             return "task/createTask";
         } catch (NumberFormatException e){
            model.addAttribute("error", "Формат даты некорректен. Правильный формат: 2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты");

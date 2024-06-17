@@ -4,11 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.tasklist.domain.exception.TaskNotCreatedException;
-import org.example.tasklist.domain.exception.TaskNotUpdatedException;
+import org.example.tasklist.domain.exception.TaskException;
 import org.example.tasklist.domain.task.Status;
 import org.example.tasklist.domain.task.Task;
-import org.example.tasklist.dto.StatusDto;
 import org.example.tasklist.dto.TaskDto;
 import org.example.tasklist.services.impl.TaskServiceImpl;
 import org.example.tasklist.services.impl.UserServiceImpl;
@@ -23,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/{id}/tasks")
+@RequestMapping("/v1/tasklist-api/user/{id}/tasks")
 @Tag(name = "Task Controller", description = "Task API")
 public class TaskController {
 
@@ -36,7 +34,7 @@ public class TaskController {
     @GetMapping
     @Operation(summary = "Get user tasks by their id")
     public List<TaskDto> getTasksByUserId(@PathVariable("id") int id){
-        List<Task> taskList = userServiceImpl.getUserTasks(userServiceImpl.showUserById(id));
+        List<Task> taskList = userServiceImpl.getUserTasks(userServiceImpl.getUser(id));
         List<TaskDto> taskDtoList = new ArrayList<>();
         for(Task task : taskList){
             TaskDto taskDto = modelMapper.map(task, TaskDto.class);
@@ -53,7 +51,7 @@ public class TaskController {
         return taskDto;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     @Operation(summary = "Create task and assign it to the user")
     public HttpStatus createTaskDto(@PathVariable("id") int id, @RequestBody @Valid TaskDto taskDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -63,7 +61,7 @@ public class TaskController {
                 stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
                 errors.add(stringBuilder.toString());
             }
-            throw new TaskNotCreatedException(errors.toString());
+            throw new TaskException(errors.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
         taskServiceImpl.createTask(id, task);
@@ -80,7 +78,7 @@ public class TaskController {
                 stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
                 errors.add(stringBuilder.toString());
             }
-            throw new TaskNotUpdatedException(errors.toString());
+            throw new TaskException(errors.toString());
         }
         Task task = modelMapper.map(taskDto, Task.class);
         taskServiceImpl.updateTask(id, task);
@@ -89,8 +87,8 @@ public class TaskController {
 
     @PostMapping("/{taskId}/status")
     @Operation(summary = "Change task status")
-    public HttpStatus changeTaskStatus(@PathVariable("taskId") int taskId, @RequestBody StatusDto statusDto){
-        taskServiceImpl.changeStatus(taskId, statusDto.getStatus());
+    public HttpStatus changeTaskStatus(@PathVariable("taskId") int taskId, @RequestParam("status") String status){
+        taskServiceImpl.changeStatus(taskId, Status.valueOf(status));
         return HttpStatus.OK;
     }
 

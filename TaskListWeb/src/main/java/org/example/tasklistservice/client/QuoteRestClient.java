@@ -1,10 +1,10 @@
 package org.example.tasklistservice.client;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.quote.Quote;
 import org.example.tasklistservice.dto.QuoteDto;
-import org.example.tasklistservice.exception.QuoteNotFoundException;
-import org.example.tasklistservice.exception.QuoteNotUpdatedException;
+import org.example.tasklistservice.exception.UserException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,16 +23,18 @@ public class QuoteRestClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public Quote getQuoteById(int id){
         try {
             String url = "http://localhost:9002/api/quotes/%d".formatted(id);
             QuoteDto quoteDto = restTemplate.exchange(url,HttpMethod.GET, returnHttpHeadersWithBasicAuthForGetRequest(), QuoteDto.class).getBody();
             return modelMapper.map(quoteDto, Quote.class);
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
-            throw new QuoteNotFoundException(notFound.getMessage());
+            throw new UserException(notFound.getMessage());
         }
     }
 
+    @CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void createQuote(Quote quote){
         try {
             String url = "http://localhost:9002/api/quotes/create";
@@ -46,15 +48,17 @@ public class QuoteRestClient {
         }
     }
 
+    @CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void deleteQuote(int id){
         try {
             String url = "http://localhost:9002/api/quotes/%d/delete".formatted(id);
              restTemplate.exchange(url,HttpMethod.DELETE, returnHttpHeadersWithBasicAuthForGetRequest(), String.class);
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
-            throw new QuoteNotFoundException(notFound.getMessage());
+            throw new UserException(notFound.getMessage());
         }
     }
 
+    @CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public Quote updateQuote(int id, Quote quote){
         try {
             String url = "http://localhost:9002/api/quotes/%d/update".formatted(id);
@@ -65,7 +69,7 @@ public class QuoteRestClient {
            QuoteDto updatedQuoteDto =  restTemplate.exchange(url, HttpMethod.POST, http, QuoteDto.class).getBody();
            return modelMapper.map(updatedQuoteDto, Quote.class);
         } catch (HttpClientErrorException.BadRequest badRequest){
-            throw new QuoteNotUpdatedException(badRequest.getMessage());
+            throw new UserException(badRequest.getMessage());
         }
     }
 
@@ -75,6 +79,7 @@ public class QuoteRestClient {
         return quoteList.get(random.nextInt(quoteList.size()));
     }
 
+    @CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Quote> getQuotes(){
         try {
             String url = "http://localhost:9002/api/quotes";
@@ -85,7 +90,7 @@ public class QuoteRestClient {
             }
             return quoteList;
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
-            throw new QuoteNotFoundException(notFound.getMessage());
+            throw new UserException(notFound.getMessage());
         }
     }
 

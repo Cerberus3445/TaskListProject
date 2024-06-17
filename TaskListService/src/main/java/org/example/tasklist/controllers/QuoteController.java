@@ -2,12 +2,9 @@ package org.example.tasklist.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.tasklist.domain.exception.QuoteNotCreatedException;
-import org.example.tasklist.domain.exception.QuoteNotFoundException;
-import org.example.tasklist.domain.exception.QuoteNotUpdatedException;
+import org.example.tasklist.domain.exception.QuoteException;
 import org.example.tasklist.domain.quote.Quote;
 import org.example.tasklist.dto.QuoteDto;
-import org.example.tasklist.services.QuoteService;
 import org.example.tasklist.services.impl.QuoteServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -40,7 +37,7 @@ public class QuoteController {
     @PostMapping("/create")
     public Quote createQuote(@Valid @RequestBody QuoteDto quoteDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            throw new QuoteNotCreatedException(formatErrorsToString(bindingResult));
+            throw new QuoteException(formatErrorsToString(bindingResult));
         }
         Quote quote = modelMapper.map(quoteDto, Quote.class);
         return quoteService.createQuote(quote);
@@ -49,7 +46,7 @@ public class QuoteController {
     @PostMapping("/{id}/update")
     public Quote updateQuote(@PathVariable("id") int id, @Valid @RequestBody QuoteDto quoteDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            throw new QuoteNotUpdatedException(formatErrorsToString(bindingResult));
+            throw new QuoteException(formatErrorsToString(bindingResult));
         }
         Quote quote = modelMapper.map(quoteDto, Quote.class);
         return quoteService.updateQuote(id, quote);
@@ -61,7 +58,7 @@ public class QuoteController {
             quoteService.deleteQuote(id);
             return HttpStatus.OK;
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
-            throw new QuoteNotFoundException("Quote with this id not found");
+            throw new QuoteException("Quote with this id not found");
         }
     }
 

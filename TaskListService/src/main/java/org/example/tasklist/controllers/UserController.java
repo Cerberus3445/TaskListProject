@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.tasklist.domain.exception.PasswordNotValid;
-import org.example.tasklist.domain.exception.UserNotCreatedException;
-import org.example.tasklist.domain.exception.UserNotUpdatedException;
+import org.example.tasklist.domain.exception.UserException;
 import org.example.tasklist.domain.user.User;
 import org.example.tasklist.dto.PasswordDto;
 import org.example.tasklist.dto.UserDto;
@@ -22,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/v1/tasklist-api/user")
 @Tag(name = "User Controller", description = "User API")
 public class UserController {
 
@@ -40,7 +38,7 @@ public class UserController {
                 stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
                 errors.add(stringBuilder.toString());
             }
-            throw new UserNotCreatedException(errors.toString());
+            throw new UserException(errors.toString());
         }
         User user = modelMapper.map(userDto, User.class);
         userServiceImpl.createUser(user);
@@ -50,7 +48,7 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Show user by their id")
     public UserDto showUserById(@PathVariable("id") int id){
-        User user = userServiceImpl.showUserById(id);
+        User user = userServiceImpl.getUser(id);
         return modelMapper.map(user, UserDto.class);
     }
 
@@ -72,14 +70,14 @@ public class UserController {
                 stringBuilder.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage());
                 errors.add(stringBuilder.toString());
             }
-            throw new UserNotUpdatedException(errors.toString());
+            throw new UserException(errors.toString());
         }
         User user = modelMapper.map(userDto, User.class);
         userServiceImpl.updateUser(id, user);
         return userDto;
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete user")
     public HttpStatus deleteUser(@PathVariable("id") int id){
         userServiceImpl.deleteUserById(id);
@@ -90,9 +88,9 @@ public class UserController {
     @Operation(summary = "Update user password")
     public HttpStatus updateUserPassword(@RequestBody @Valid PasswordDto passwordDto, BindingResult bindingResult, @PathVariable("id") int id){
         if(bindingResult.hasErrors()){
-            throw new PasswordNotValid("Длина пароля должен составлять от 5 до 120 символов");
+            throw new UserException("Длина пароля должен составлять от 5 до 120 символов");
         }
-        userServiceImpl.updatePassword(id, passwordDto.getPassword());
+        userServiceImpl.updatePassword(id, passwordDto);
         return HttpStatus.OK;
     }
 

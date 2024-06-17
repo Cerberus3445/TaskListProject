@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: tasklist-backend
   security:
     user:
       name: taskListService
@@ -34,3 +36,7 @@ spring:
             enable: true
 server:
   port: 9002
+eureka:
+  client:
+    service-url:
+      defaultZone=http://localhost:8761/eureka:

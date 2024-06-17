@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.client.UserRestClient;
 import org.example.tasklistservice.exception.ErrorHandling;
-import org.example.tasklistservice.exception.UserNotFoundException;
-import org.example.tasklistservice.exception.UserNotUpdatedException;
+import org.example.tasklistservice.exception.UserException;
 import org.example.tasklistservice.security.PersonDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,10 +21,10 @@ public class UserController {
     private final ErrorHandling errorHandling;
 
     @GetMapping("/aboutUser")
-    public String showUserById(Model model){
+    public String getUser(Model model){
         try {
             model.addAttribute("user", userRestClient.getUser(getUserId()));
-        } catch (UserNotFoundException userNotFoundException){
+        } catch (Exception e){
             return "errors/404";
         }
         return "users/aboutUser";
@@ -52,9 +51,9 @@ public class UserController {
     @PostMapping("/{id}/update")
     public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") int id, Model model){
         try {
-            userRestClient.update(user, id);
-        } catch (UserNotUpdatedException userNotUpdatedException){
-            model.addAttribute("error",  errorHandling.userNotUpdatedException(userNotUpdatedException));
+            userRestClient.updateUser(user, id);
+        } catch (UserException userException){
+            model.addAttribute("error",  errorHandling.handleUserException(userException));
             return "users/update";
         }
         return "redirect:/web/user/aboutUser";
