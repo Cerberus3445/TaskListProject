@@ -1,0 +1,176 @@
+.wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: #FFE0AF;
+    background-image:
+            linear-gradient(45deg, #FFDD88 25%, transparent 25%, transparent 75%, #FFDD88 75%, #FFDD88),
+            linear-gradient(45deg, #FFDD88 25%, transparent 25%, transparent 75%, #FFDD88 75%, #FFDD88),
+            linear-gradient(45deg, transparent, transparent 50%, #FFC87F 50%, #FFC87F);
+    background-size: 100px 100px;
+    background-position: 0 0, 50px 50px, 50px 0px;
+    -webkit-animation: scroll 5s linear infinite;
+}
+
+@-webkit-keyframes scroll {
+    from { background-position: 0 0, 50px 50px, 50px 0; }
+    to { background-position: -100px -100px, -50px -50px, -50px -100px; }
+}
+
+.info{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 40px;
+    width: 1000px;
+    left: 590px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.info>h1{
+    color: gray;
+}
+
+.info>p{
+    color: gray;
+}
+
+.update{
+    margin-top: 300px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 650px;
+    left: 750px;
+    height: 450px;
+    background: white;
+    display: flex;
+    align-items: center;
+}
+
+.update>form{
+    display:block;
+    margin:0 auto;
+}
+
+.submit_button{
+    text-align: center;
+}
+
+.submit_button_password{
+    margin: 20px;
+    text-align: center;
+}
+
+.doneTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 650px;
+    right: 0;
+    height: 650px;
+    background: white;
+    text-align: center;
+}
+
+.inProgressTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 670px;
+    height: 650px;
+    background: white;
+    text-align: center;
+}
+
+.plannedTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 650px;
+    left: 0px;
+    height: 650px;
+    background: white;
+    text-align: center;
+}
+
+.task_info{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.task_info>h1{
+    color: gray;
+}
+
+.noTasks{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 670px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.create_task{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.create_task>form{
+    height: 700px;
+}
+
+.title_and_description{
+    height: 300px;
+}
+
+.title_and_description>input{
+    flex-direction: column;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.expirationDate{
+    margin-top: 300px;
+}
+
+.quote{
+    width: 750px;
+    height: 80px;
+    background: ghostwhite;
+    border-radius: 10px;
+    margin-top: 900px;
+    margin-left: 689px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    display: inline-block;
+    text-align: center;
+}

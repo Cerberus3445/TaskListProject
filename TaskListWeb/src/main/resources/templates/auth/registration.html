@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" href="/css/auth.css" th:href="@{/css/auth.css}">
+</head>
+<body>
+
+<div th:list="${errors}">
+    <h1 style="color: red" th:text="${errors}"></h1>
+</div>
+<div class="container">
+    <div class="screen">
+        <div class="screen__content">
+            <form class="login" th:method="POST" th:action="@{/auth/registration}" th:object="${user}" >
+                <div class="login__field">
+                    <i class="login__icon fas fa-user"></i>
+                    <input type="text" name="username" id="username" class="login__input" placeholder="User name" th:field="*{name}"/>
+                </div>
+                <br>
+                <div class="login__field">
+                    <i class="login__icon fas fa-user"></i>
+                    <input type="text" name="username" id="email" class="login__input" placeholder="Email" th:field="*{email}"/>
+                </div>
+                <br/>
+                <div class="login__field">
+                    <i class="login__icon fas fa-lock"></i>
+                    <input type="password" name="password" id="password" class="login__input" placeholder="Password" th:field="*{password}"/>
+                </div>
+                <br/>
+                <button class="button login__submit">
+                    <span class="button__text">Register</span>
+                    <i class="button__icon fas fa-chevron-right"></i>
+                </button>
+            </form>
+        </div>
+        <div class="screen__background">
+            <span class="screen__background__shape screen__background__shape4"></span>
+            <span class="screen__background__shape screen__background__shape3"></span>
+            <span class="screen__background__shape screen__background__shape2"></span>
+            <span class="screen__background__shape screen__background__shape1"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,1 +1,1 @@
-create schema if not exists tasklist;
+create schema if not exists task_project;

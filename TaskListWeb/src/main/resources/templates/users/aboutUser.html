@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>About User</title>
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
 </head>
 <body>
-<p th:text="${user}"></p>
+
+<div class="info">
+    <h1 th:text="${user.getName()}"></h1>
+
+    <a th:href="@{/web/user/aboutUser/update}">Обновить</a>
+
+    <a th:href="@{/web/user/aboutUser/updatePassword}">Обновить пароль</a>
+
+    <a th:href="@{/web/user/aboutUser/tasks}">Список задач</a>
+
+    <form th:method="DELETE" th:action="@{/web/user/{id}(id=${user.getId()})}">
+        <input type="submit" value="Delete account">
+    </form>
+
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Выйти" />
+    </form>
+</div>
+
+<div class="wrapper"></div>
 </body>
 </html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Quote</title>
+</head>
+<body>
+<h1 th:text="${quote.getText()}"></h1>
+<h1 th:text="${quote.getAuthor()}"></h1>
+
+<form th:method="DELETE" th:action="@{/admin/main/{id}(id=${quote.getId()})}">
+  <input type="submit" value="Удалить">
+</form>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Quote</title>
+</head>
+<body>
+<div class="update_quote">
+    <div th:list="${error}">
+        <h1 style="color: red" th:text="${error}"></h1>
+    </div>
+
+    <h1 style="color: gray">Обновить цитату</h1>
+    <form th:method="POST" th:action="@{/admin/main/{id}/update(id=${quote.getId()})}" th:object="${quote}">
+
+        <div class="form__group(delete)">
+            <input type="text" th:field="*{text}" class="form__input" id="title" placeholder="Текст" required="" />
+            <br>
+        </div>
+
+        <div class="form__group(delete)">
+            <input type="text" th:field="*{author}" class="form__input" id="description" placeholder="Автор" required="" />
+            <br>
+        </div>
+        <div class="submit_button"> <input  type="submit" value="Обновить"></div>
+    </form>
+</div>
+</body>
+</html>

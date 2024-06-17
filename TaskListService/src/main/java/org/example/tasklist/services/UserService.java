@@ -1,47 +1,24 @@
 package org.example.tasklist.services;
 
-import lombok.RequiredArgsConstructor;
-
-import org.example.tasklist.domain.exception.UserNotFoundException;
 import org.example.tasklist.domain.task.Task;
 import org.example.tasklist.domain.user.User;
-import org.example.tasklist.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.example.tasklist.dto.PasswordDto;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-@Transactional
-public class UserService {
+public interface UserService {
 
-    private final UserRepository userRepository;
+    User getUser(int id);
 
-    private final ModelMapper modelMapper;
+    User createUser(User user);
 
-    public User showUserById(int id){
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-    }
+    User findByEmail(String email);
 
-    public User createUser(User user){
-        User user1 = userRepository.save(user);
-        return user1;
-    }
+    User updateUser(int id, User userUpdated);
 
-    public User updateUser(int id, User userUpdated){
-        userUpdated.setId(id);
-        userRepository.save(userUpdated);
-        return userUpdated;
-    }
+    List<Task> getUserTasks(User user);
 
-    public List<Task> getUserTasks(User user){
-        return user.getTasks();
-    }
+    void deleteUserById(int id);
 
-    public void deleteUserById(int id){
-        userRepository.deleteById(id);
-    }
-
+    void updatePassword(int id, PasswordDto password);
 }

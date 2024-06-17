@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks List</title>
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+</head>
+<body>
+
+<div th:if="${doneTasks}">
+    <div class="doneTasks">
+        <h1 style="color: gray">Выполенно</h1>
+        <div th:each="task : ${doneTasks}">
+            <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${task.getId()})}" th:text="${task.getTitle()}"></a>
+        </div>
+
+        <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
+        <p></p>
+        <a style="color:gray;" href="/web/user/aboutUser">На страницу пользователя</a>
+    </div>
+
+    <div class="plannedTasks">
+        <h1 style="color: gray">Запланированно</h1>
+        <div th:each="plannedTask : ${plannedTasks}">
+            <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${plannedTask.getId()})}" th:text="${plannedTask.getTitle()}"></a>
+        </div>
+
+        <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
+        <p></p>
+        <a style="color:gray;" href="/web/user/aboutUser">На страницу пользователя</a>
+    </div>
+
+    <div class="inProgressTasks">
+        <h1 style="color: gray">В прогрессе</h1>
+        <div th:each="inProgressTask : ${inProgressTasks}">
+            <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/{taskId}(taskId=${inProgressTask.getId()})}" th:text="${inProgressTask.getTitle()}"></a>
+        </div>
+
+        <a style="color: gray" th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
+        <p></p>
+        <a style="color:gray;" href="/web/user/aboutUser">На страницу пользователя</a>
+    </div>
+</div>
+
+<div class="noTasks" th:if="${noTasks}">
+    <h1 style="color: gray">Задач нет</h1>
+
+    <a th:href="@{/web/user/aboutUser/tasks/create}">Создать задачу</a>
+    <p></p>
+    <a href="/web/user/aboutUser">На страницу пользователя</a>
+</div>
+
+<div class="quote">
+    <h3 style="color: darkgoldenrod" th:text="${quote}"></h3>
+</div>
+
+<div class="wrapper"></div>
+</body>
+</html>

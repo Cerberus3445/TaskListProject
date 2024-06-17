@@ -3,7 +3,6 @@ package org.example.tasklist.domain.task;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.example.tasklist.domain.user.User;
-
 import java.time.LocalDateTime;
 
 @Data
@@ -33,4 +32,5 @@ public class Task {
     @Column(name = "expiration_date")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime expirationDate;
+
 }
