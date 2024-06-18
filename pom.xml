@@ -9,7 +9,9 @@
   <url>http://maven.apache.org</url>
 
   <modules>
-    <module>TaskListService</module>
+    <module>TaskListApi</module>
     <module>TaskListWeb</module>
+    <module>EurekaService</module>
+    <module>CloudConfigServer</module>
   </modules>
 </project>

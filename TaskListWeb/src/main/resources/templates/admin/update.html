@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Update Quote</title>
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/input.css" th:href="@{/css/input.css}">
 </head>
 <body>
-<div class="update_quote">
+<div class="quote_update">
     <div th:list="${error}">
         <h1 style="color: red" th:text="${error}"></h1>
     </div>
@@ -25,5 +27,6 @@
         <div class="submit_button"> <input  type="submit" value="Обновить"></div>
     </form>
 </div>
+<div class="wrapper"></div>
 </body>
 </html>

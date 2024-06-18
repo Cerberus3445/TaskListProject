@@ -1,6 +1,8 @@
 spring:
   application:
     name: tasklist-web
+  config:
+    import: optional:configserver::http://localhost:8888
   mvc:
     hiddenmethod:
       filter:
@@ -15,4 +17,4 @@ resilience4j:
   retry:
     instances:
       default:
-        enable-exponential-backoff: true
+        max-attempts: 5

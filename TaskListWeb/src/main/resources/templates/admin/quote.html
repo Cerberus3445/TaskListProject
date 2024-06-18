@@ -3,14 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Quote</title>
+  <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+  <link rel="stylesheet" href="/static/css/input.css" th:href="@{/css/input.css}">
 </head>
 <body>
-<h1 th:text="${quote.getText()}"></h1>
-<h1 th:text="${quote.getAuthor()}"></h1>
 
-<form th:method="DELETE" th:action="@{/admin/main/{id}(id=${quote.getId()})}">
-  <input type="submit" value="Удалить">
-</form>
+<div class="quote_info">
+  <h1 th:text="${quote.getText()}"></h1>
+  <h1 th:text="${quote.getAuthor()}"></h1>
 
+  <a th:href="@{/admin/main/{id}/update(id=${quote.getId()})}">обновить цитату</a>
+
+  <form th:method="DELETE" th:action="@{/admin/main/{id}(id=${quote.getId()})}">
+    <input type="submit" value="Удалить">
+  </form>
+</div>
+<div class="wrapper"></div>
 </body>
 </html>

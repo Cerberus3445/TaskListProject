@@ -1,5 +1,6 @@
 package org.example.tasklistservice.client;
 import feign.FeignException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.PasswordDto;
@@ -10,11 +11,8 @@ import org.example.tasklistservice.proxy.FeignProxy;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-
 @RequiredArgsConstructor
 @Component
 public class UserRestClient {
@@ -38,6 +36,7 @@ public class UserRestClient {
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void createUser(User user){
         logger.info("Create user: " + user.toString());
         try {
@@ -49,6 +48,7 @@ public class UserRestClient {
         }
     }
 
+    //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void updateUser(User user, int id){
         logger.info("Update user: " + user.toString());
         try {
@@ -94,7 +94,7 @@ public class UserRestClient {
         }
     }
 
-    public ServerException hardcodedResponse(Exception e) throws ServerException {
+    private void hardcodedResponse(Exception ex){
         throw new ServerException();
     }
 }

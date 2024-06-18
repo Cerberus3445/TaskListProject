@@ -174,3 +174,72 @@
     display: inline-block;
     text-align: center;
 }
+
+.create_quote{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.quote_update{
+    margin-top: 300px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 650px;
+    left: 750px;
+    height: 450px;
+    background: white;
+    display: flex;
+    align-items: center;
+}
+
+.quote_update>h1{
+    color: gray;
+}
+
+.quotes_list{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 650px;
+    left: 0px;
+    height: 650px;
+    background: white;
+    text-align: center;
+}
+
+.quote_info{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}
+
+.quotes_list>h1{
+    color: gray;
+}
+
+.admin_main{
+    margin-top: 60px;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    width: 800px;
+    left: 580px;
+    height: 750px;
+    background: white;
+    text-align: center;
+}

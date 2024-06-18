@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin page</title>
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/input.css" th:href="@{/css/input.css}">
 </head>
 <body>
-Страничка админа
-
-
-<a href="/admin/main/list">Список цитат</a>
-<a href="/admin/main/create">Создать цитату</a>
+<div class="wrapper"></div>
+<div class="admin_main">
+    <h1 style="color: gray">Страничка админа</h1>
+    <a href="/admin/main/list">Список цитат</a>
+    <a href="/admin/main/create">Создать цитату</a>
+</div>
 </body>
 </html>

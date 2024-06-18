@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Quotes List</title>
+    <link rel="stylesheet" href="/static/css/forAllPage.css" th:href="@{/css/forAllPage.css}">
+    <link rel="stylesheet" href="/static/css/input.css" th:href="@{/css/input.css}">
 </head>
 <body>
-<div th:each="quote : ${quotesList}">
-    <a style="color: gray" th:href="@{/admin/main/list}" th:text="${quote.getText()}"></a>
+<div class="inProgressTasks">
+    <div th:each="quote : ${quotesList}">
+        <a style="color: gray" th:href="@{/admin/main/{id}(id=${quote.getId()})}" th:text="${quote.getText()}"></a>
+    </div>
+    <a href="/admin/main">На страничку админа</a>
 </div>
-
-<a href="/admin/main">На страничку админа</a>
+<div class="wrapper"></div>
 </body>
 </html>

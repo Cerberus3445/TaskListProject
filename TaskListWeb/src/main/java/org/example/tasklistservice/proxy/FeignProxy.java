@@ -1,7 +1,9 @@
 package org.example.tasklistservice.proxy;
 
 import org.example.tasklistservice.config.FeignClientConfiguration;
+import org.example.tasklistservice.domain.quote.Quote;
 import org.example.tasklistservice.dto.PasswordDto;
+import org.example.tasklistservice.dto.QuoteDto;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.dto.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -12,6 +14,7 @@ import java.util.List;
 @FeignClient(name = "tasklist-backend", configuration = FeignClientConfiguration.class)
 public interface FeignProxy {
 
+    //Для User:
     @GetMapping("/v1/tasklist-api/user/{id}")
     UserDto getUser(@PathVariable int id);
 
@@ -29,6 +32,8 @@ public interface FeignProxy {
 
     @DeleteMapping("/v1/tasklist-api/user/{id}")
     void deleteUser(@PathVariable("id") int id);
+
+    //Для Task:
 
     @GetMapping("/v1/tasklist-api/user/{id}/tasks/{taskId}")
     TaskDto getTask(@PathVariable("id") int userId, @PathVariable("taskId") int taskId);
@@ -56,4 +61,21 @@ public interface FeignProxy {
 
     @DeleteMapping("/v1/tasklist-api/user/{id}/tasks/{taskId}")
     void deleteTask(@PathVariable("id") int userId, @PathVariable("taskId") int taskId);
+
+    //Для Quote:
+
+    @GetMapping("/v1/tasklist-api/quotes")
+    List<QuoteDto> getQuoteList();
+
+    @GetMapping("/v1/tasklist-api/quotes/{id}")
+    QuoteDto getQuote(@PathVariable("id") int id);
+
+    @PostMapping("/v1/tasklist-api/quotes")
+    void createQuote(@RequestBody QuoteDto quoteDto);
+
+    @PostMapping("/v1/tasklist-api/quotes/{id}/update")
+    void updateQuote(@PathVariable("id") int id, @RequestBody QuoteDto quoteDto);
+
+    @DeleteMapping("/v1/api/quotes/{id}/delete")
+    void deleteQuote(@PathVariable("id") int id);
 }
