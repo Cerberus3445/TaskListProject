@@ -21,19 +21,29 @@
 }
 
 .info{
-    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 40px;
-    width: 1000px;
-    left: 590px;
+    width: 800px;
     height: 750px;
     background: white;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .info>h1{
     color: gray;
+}
+
+.info>a{
+    color: gray;
+}
+
+.info>input{
+    text-align: center;
 }
 
 .info>p{
@@ -41,16 +51,17 @@
 }
 
 .update{
-    margin-top: 300px;
     position: fixed;
     z-index: 9999;
-    top: 0;
-    width: 650px;
-    left: 750px;
-    height: 450px;
+    width: 800px;
+    height: 750px;
     background: white;
-    display: flex;
-    align-items: center;
+    text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .update>form{
@@ -104,15 +115,17 @@
 }
 
 .task_info{
-    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 0;
     width: 800px;
-    left: 580px;
     height: 750px;
     background: white;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .task_info>h1{
@@ -120,27 +133,31 @@
 }
 
 .noTasks{
-    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 0;
     width: 800px;
-    left: 670px;
     height: 750px;
     background: white;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .create_task{
-    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 0;
     width: 800px;
-    left: 580px;
     height: 750px;
     background: white;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .create_task>form{
@@ -205,27 +222,31 @@
 }
 
 .quotes_list{
-    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 0;
-    width: 650px;
-    left: 0px;
-    height: 650px;
-    background: white;
-    text-align: center;
-}
-
-.quote_info{
-    margin-top: 60px;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
     width: 800px;
-    left: 580px;
     height: 750px;
     background: white;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+.quote_info{
+    position: fixed;
+    z-index: 9999;
+    width: 800px;
+    height: 750px;
+    background: white;
+    text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .quotes_list>h1{
@@ -233,13 +254,15 @@
 }
 
 .admin_main{
-    margin-top: 60px;
     position: fixed;
     z-index: 9999;
-    top: 0;
     width: 800px;
-    left: 580px;
     height: 750px;
     background: white;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }

@@ -5,13 +5,11 @@ import org.example.tasklistservice.domain.task.Status;
 import org.example.tasklistservice.domain.task.Task;
 import org.example.tasklistservice.dto.TaskDto;
 import org.example.tasklistservice.exception.TaskException;
-import org.example.tasklistservice.exception.UserException;
 import org.example.tasklistservice.proxy.FeignProxy;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import java.time.LocalDateTime;
 import java.util.*;
 

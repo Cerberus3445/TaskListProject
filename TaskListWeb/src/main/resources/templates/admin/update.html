@@ -16,12 +16,12 @@
     <form th:method="POST" th:action="@{/admin/main/{id}/update(id=${quote.getId()})}" th:object="${quote}">
 
         <div class="form__group(delete)">
-            <input type="text" th:field="*{text}" class="form__input" id="title" placeholder="Текст" required="" />
+            <input style="background: #FFE0AF" type="text" th:field="*{text}" class="form__input" id="title" placeholder="Текст" required="" />
             <br>
         </div>
 
         <div class="form__group(delete)">
-            <input type="text" th:field="*{author}" class="form__input" id="description" placeholder="Автор" required="" />
+            <input style="background: #FFE0AF" type="text" th:field="*{author}" class="form__input" id="description" placeholder="Автор" required="" />
             <br>
         </div>
         <div class="submit_button"> <input  type="submit" value="Обновить"></div>

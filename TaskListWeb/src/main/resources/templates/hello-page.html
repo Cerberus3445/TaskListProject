@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title> Glassmorphism Website | CodingLab </title>
+    <link rel="stylesheet" href="/static/css/forHelloPage.css" th:href="@{/css/forHelloPage.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <div class="logo"><a href="#">TODO List></a></div>
+        <ul class="menu">
+            <li><a href="#">plan, create, embody</a></li>
+        </ul>
+        <div class="buttons">
+            <form method="GET" th:action="@{/hello/toAuth}">
+                <input type="submit" value="Вход">
+            </form>
+            <form method="GET" th:action="@{/hello/toRegister}">
+                <input type="submit" value="Регистрация">
+            </form>
+        </div>
+    </nav>
+    <div class="text-content">
+        <h2>Создавайте задачи,<br>Планируйте каждый шаг</h2>
+        <p>Каждая минута, затраченная на планирование, экономит 10 минут при осуществлении плана. Брайан Трейси.</p>
+    </div>
+    <div class="play-button">
+        <span class="play">Репозиторий проекта на Github:</span>
+        <i class="fas fa-play" onclick="click()"></i>
+    </div>
+</header>
+</body>
+</html>

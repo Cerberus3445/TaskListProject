@@ -1,7 +1,6 @@
 package org.example.tasklistservice.proxy;
 
 import org.example.tasklistservice.config.FeignClientConfiguration;
-import org.example.tasklistservice.domain.quote.Quote;
 import org.example.tasklistservice.dto.PasswordDto;
 import org.example.tasklistservice.dto.QuoteDto;
 import org.example.tasklistservice.dto.TaskDto;
