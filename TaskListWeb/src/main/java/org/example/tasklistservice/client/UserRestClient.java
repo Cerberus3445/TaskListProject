@@ -27,7 +27,7 @@ public class UserRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public User getUser(int id){
-        logger.info("Get user with %d id".formatted(id));
+        logger.info("Get user {}", id);
         try {
             UserDto userDto = feignProxy.getUser(id);
             return modelMapper.map(userDto, User.class);
@@ -38,7 +38,7 @@ public class UserRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void createUser(User user){
-        logger.info("Create user: " + user.toString());
+        logger.info("Create user {}", user);
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             UserDto userDto = modelMapper.map(user, UserDto.class);
@@ -50,7 +50,7 @@ public class UserRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void updateUser(User user, int id){
-        logger.info("Update user: " + user.toString());
+        logger.info("Update user {} with id {}", user, id);
         try {
             User getUser = getUser(id);
             user.setPassword(getUser.getPassword());
@@ -64,7 +64,7 @@ public class UserRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void deleteUser(int id){
-        logger.info("Delete user with %d id".formatted(id));
+        logger.info("Delete user with {}", id);
         try {
             feignProxy.deleteUser(id);
         } catch (FeignException e){
@@ -74,7 +74,7 @@ public class UserRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public User findByEmail(String email) {
-        logger.info("Find user with %s email".formatted(email));
+        logger.info("Find user by email {}", email);
         try {
             UserDto userDto = feignProxy.getUserByEmail(email);
             return modelMapper.map(userDto, User.class);
@@ -85,7 +85,7 @@ public class UserRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void updatePassword(int id, String password){
-        logger.info("Update password for user with %d id".formatted(id));
+        logger.info("Update password for user with {} id and password {}", id, password);
         try {
             PasswordDto passwordDto = new PasswordDto(passwordEncoder.encode(password));
             feignProxy.updatePassword(id, passwordDto);

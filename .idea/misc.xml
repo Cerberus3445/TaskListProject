@@ -9,12 +9,14 @@
         <option value="$PROJECT_DIR$/EurekaService/pom.xml" />
         <option value="$PROJECT_DIR$/TaskListApi-2/pom.xml" />
         <option value="$PROJECT_DIR$/TaskListApi-Clone/pom.xml" />
+        <option value="$PROJECT_DIR$/zipkin-server/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/TaskListApi-2/pom.xml" />
         <option value="$PROJECT_DIR$/TaskListApiClone/pom.xml" />
+        <option value="$PROJECT_DIR$/zipkin-server/pom.xml" />
       </set>
     </option>
   </component>

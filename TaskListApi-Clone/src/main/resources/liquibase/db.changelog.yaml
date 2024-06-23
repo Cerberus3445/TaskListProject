@@ -1,4 +1,0 @@
-databaseChangeLog: #включаем все файлы, которые будут использоваться при старте LiquiBase
-  - includeAll:
-      path: /changesets
-      relativeToChangelogFile : true

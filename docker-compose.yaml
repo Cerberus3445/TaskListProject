@@ -1,34 +1,12 @@
-version: '3'
-
-volumes:
-  cache:
-    driver: local
+version: '3.7'
 
 services:
-  api:
-    build: ./TaskListService
-    container_name: task_list_api
-    depends_on:
-      - db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tasklist?currentSchema=task_project
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=Strekoza84
+  zipkin-server:
+    image: openzipkin/zipkin:2.23
     ports:
-      - '8080:8080'
+      - "9411:9411"
+    networks:
+      - task-list-network
 
-  db:
-    image: postgres:15.1-alpine
-    container_name: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=Strekoza84
-      - POSTGRES_DB=tasklist
-    volumes:
-      - ./TaskListService/src/main/resources/db-init:/docker-entrypoint-initdb.d
-  web:
-    container_name: task_list_web
-    build: ./TaskListWeb
-    ports:
-      - "9090:9090"
-#не работает, переделать
+networks:
+  task-list-network:

@@ -7,6 +7,8 @@ import org.example.tasklistservice.dto.QuoteDto;
 import org.example.tasklistservice.exception.UserException;
 import org.example.tasklistservice.proxy.FeignProxy;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,8 +25,11 @@ public class QuoteRestClient {
 
     private final FeignProxy feignProxy;
 
+    private final Logger logger = LoggerFactory.getLogger(QuoteRestClient.class);
+
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public Quote getQuoteById(int id){
+        logger.info("Get quote {}", id);
         try {
             QuoteDto quoteDto = feignProxy.getQuote(id);
             return modelMapper.map(quoteDto, Quote.class);
@@ -35,6 +40,7 @@ public class QuoteRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void createQuote(Quote quote){
+        logger.info("Create quote {}", quote);
         try {
             QuoteDto quoteDto = modelMapper.map(quote, QuoteDto.class);
             feignProxy.createQuote(quoteDto);
@@ -45,6 +51,7 @@ public class QuoteRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void deleteQuote(int id){
+        logger.info("Delete quote {}", id);
         try {
             feignProxy.deleteQuote(id);
         } catch (HttpClientErrorException.BadRequest.NotFound notFound){
@@ -54,6 +61,7 @@ public class QuoteRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void updateQuote(int id, Quote quote){
+        logger.info("Update quote with id {}, {}", id, quote);
         try {
             QuoteDto quoteDto = modelMapper.map(quote, QuoteDto.class);
             feignProxy.updateQuote(id, quoteDto);
@@ -63,6 +71,7 @@ public class QuoteRestClient {
     }
 
     public Quote getRandomQuotes(){
+        logger.info("GetRandomQuotes");
         Random random = new Random();
         List<Quote> quoteList = getQuotes();
         return quoteList.get(random.nextInt(quoteList.size()));
@@ -70,6 +79,7 @@ public class QuoteRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Quote> getQuotes(){
+        logger.info("Get quotes");
         try {
             List<QuoteDto> quoteDtoList = feignProxy.getQuoteList();
             List<Quote> quoteList = new ArrayList<>();

@@ -27,7 +27,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public Task getTask(int userId, int taskId){
-        logger.info("Get task where userId = %d and taskId = %d".formatted(userId, taskId));
+        logger.info("Get task where userId = {} and taskId = {}", userId, taskId);
         try {
             TaskDto taskDto = feignProxy.getTask(userId, taskId);
             return modelMapper.map(taskDto, Task.class);
@@ -38,7 +38,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getDoneTasks(int userId){
-        logger.info("Get task with DONE status userId = %d".formatted(userId));
+        logger.info("Get task with DONE status userId = {}", userId);
         try {
             List<TaskDto> taskDtoList = feignProxy.getTasksWithDoneStatus(userId);
             return fromTaskDtoArrayToTaskList(taskDtoList, userId);
@@ -49,7 +49,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getInProgressTasks(int userId){
-        logger.info("Get task with IN_PROGRESS status userId = %d".formatted(userId));
+        logger.info("Get task with IN_PROGRESS status userId = {}", userId);
         try {
             List<TaskDto> taskDtoList = feignProxy.getTasksWithInProgressStatus(userId);
             return fromTaskDtoArrayToTaskList(taskDtoList, userId);
@@ -60,7 +60,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getPlannedTasks(int userId){
-        logger.info("Get task with PLANNED status userId = %d".formatted(userId));
+        logger.info("Get task with PLANNED status userId = {}", userId);
         try {
             List<TaskDto> taskDtoList = feignProxy.getTasksWithPlannedStatus(userId);
             return fromTaskDtoArrayToTaskList(taskDtoList, userId);
@@ -71,7 +71,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public List<Task> getTasksByUserId(int id){
-        logger.info("Get tasks with id %d".formatted(id));
+        logger.info("Get tasks with user id {}", id);
         try {
             List<TaskDto> taskDtoList = feignProxy.getTasksList(id);
             return fromTaskDtoArrayToTaskList(taskDtoList, id);
@@ -82,7 +82,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void createTask(int userId, TaskDto taskDto){
-        logger.info("Create task " + taskDto.toString() + "where userId  = %d".formatted(userId));
+        logger.info("Create task {} where userId = {}", taskDto, userId);
         try {
             feignProxy.createTask(userId, taskDto);
         } catch (FeignException e){
@@ -92,7 +92,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void updateTask(int userId, int taskId, TaskDto taskDto){
-        logger.info("Update task " + taskDto.toString() + "where userId = %d and taskId = %d".formatted(userId, taskId));
+        logger.info("Update task with id {}, {}, where userId = {}", taskId, taskDto, userId);
         try {
             Task task = getTask(userId, taskId);
             taskDto.setStatus(task.getStatus());
@@ -104,7 +104,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void deleteTask(int userId, int taskId){
-        logger.info("Delete task where userId = %d and taskId = %d".formatted(userId, taskId));
+        logger.info("Delete task with {} id and userId {}", taskId, userId);
         try {
             feignProxy.deleteTask(userId, taskId);
         } catch (FeignException e){
@@ -114,7 +114,7 @@ public class TaskRestClient {
 
     //@CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
     public void setTaskStatus(int userId, int taskId, Status status){
-        logger.info("Set task status with id = %d ".formatted(taskId) + status.toString());
+        logger.info("Set task status with {} id, {} where userId = {}", taskId, status, userId);
         try {
             feignProxy.changeStatus(userId, taskId, status.toString());
         } catch (FeignException e){
