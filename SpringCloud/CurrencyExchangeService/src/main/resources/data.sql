@@ -1,2 +1,0 @@
-insert into CURRENCY_EXCHANGE(conversion_Multiple, ID, CURRENCY_FROM, CURRENCY_TO, ENVIRONMENT) values ( 50, 100, 'USD', 'RUB', '');
-insert into CURRENCY_EXCHANGE(conversion_Multiple, ID, CURRENCY_FROM, CURRENCY_TO, ENVIRONMENT) values ( 75, 315, 'USD', 'INR', '')
