@@ -1,4 +1,4 @@
-Проект TODO листа с микросервисной архитектурой.
+Проект TODO листа с микросервисной архитектурой. Приложения c авторизацией и правами доступа на основе ролей(USER,ADMIN). Помимо базового функционала TODO листа есть цитаты.
 
 Стэк проекта: Spring Boot, Spring Security(Basic Auth со стороны Rest сервиса), Spring Cloud(Eureka, Load Balancer, Feign. Resilience4j, Configuration), Spring Data Jpa, Spring REST, LomBok, Thymeleaf, Maven, Mail, Hibernate, PostgreSQL, Swagger, Liquibase, Validation, Docker.
 
@@ -9,4 +9,4 @@ http://localhost:9002, http://localhost:9003 - 2 REST API. Почти идент
 http://localhost:9002/swagger-ui/index.html#/ - документация по REST API;
 http://localhost:8761 - Eureka;
 http://localhost:8888 - Cloud Config Server(берёт данные с https://github.com/Cerberus3445/CloudConfig);
-Zipkin - в стадии разработки;
+http://localhost:9411 - Zipkin;
