@@ -13,7 +13,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("http://localhost:8761/?continue")
+                        .requestMatchers("http://eureka-service:8761/?continue")
+                        .authenticated()
+                        .requestMatchers("http://eureka-service:8761")
                         .authenticated()
                         .anyRequest()
                         .permitAll())

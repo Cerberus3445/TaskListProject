@@ -2,6 +2,8 @@ package org.example.tasklistservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.client.QuoteRestClient;
 import org.example.tasklistservice.domain.quote.Quote;
+import org.example.tasklistservice.exception.ErrorHandling;
+import org.example.tasklistservice.exception.QuoteException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final QuoteRestClient quoteRestClient;
+
+    private final ErrorHandling errorHandling;
 
     @GetMapping
     public String adminPage(){
@@ -37,8 +41,13 @@ public class AdminController {
     }
 
     @PostMapping("/{id}/update")
-    public String updatePage(@PathVariable("id") int id, Quote quote){
-        quoteRestClient.updateQuote(id, quote);
+    public String updatePage(@PathVariable("id") int id, Quote quote, Model model){
+        try {
+            quoteRestClient.updateQuote(id, quote);
+        } catch (QuoteException quoteException){
+            model.addAttribute("errors", errorHandling.handleQuoteException(quoteException));
+            return "admin/update";
+        }
         return "redirect:/admin/main";
     }
 
@@ -49,14 +58,24 @@ public class AdminController {
     }
 
     @DeleteMapping("/{id}")
-    public String deletePage(@PathVariable("id") int id){
-        quoteRestClient.deleteQuote(id);
+    public String deletePage(@PathVariable("id") int id, Model model){
+        try {
+            quoteRestClient.deleteQuote(id);
+        } catch (QuoteException quoteException){
+            model.addAttribute("errors", errorHandling.handleQuoteException(quoteException));
+            return "admin/quote";
+        }
         return "redirect:/admin/main";
     }
 
     @PostMapping("/create")
-    public String createQuote(Quote quote){
-        quoteRestClient.createQuote(quote);
+    public String createQuote(Quote quote, Model model){
+        try {
+            quoteRestClient.createQuote(quote);
+        } catch (QuoteException quoteException){
+            model.addAttribute("errors", errorHandling.handleQuoteException(quoteException));
+            return "admin/create";
+        }
         return "redirect:/admin/main";
     }
 }

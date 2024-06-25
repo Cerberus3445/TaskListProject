@@ -8,9 +8,7 @@
 </head>
 <body>
 <div class="create_quote">
-    <div th:list="${error}">
-        <h1 style="color: red" th:text="${error}"></h1>
-    </div>
+    <h1 style="color: red" th:text="${errors}"></h1>
 
     <h1 style="color: gray"> Создать цитату</h1>
     <form th:method="POST" th:action="@{/admin/main/create}" th:object="${quote}">

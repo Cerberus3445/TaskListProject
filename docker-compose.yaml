@@ -7,6 +7,50 @@ services:
       - "9411:9411"
     networks:
       - task-list-network
-
+  eureka-server:
+    image: cerberus/mmv2-eureka-service:0.0.1-SNAPSHOT
+    ports:
+      - "8761:8761"
+    networks:
+      - task-list-network
+  tasklist-api-origin:
+    image: cerberus/mmv2-tasklist-api-origin:0.0.1-SNAPSHOT
+    ports:
+      - "9002:9002"
+    networks:
+      - task-list-network
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+    depends_on:
+      - eureka-server
+  tasklist-api-clone:
+    image: cerberus/mmv2-tasklist-api-clone:0.0.1-SNAPSHOT
+    ports:
+      - "9003:9003"
+    networks:
+      - task-list-network
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+    depends_on:
+      - eureka-server
+  tasklist-web:
+    image: cerberus/mmv2-tasklist-api-origin:0.0.1-SNAPSHOT
+    ports:
+      - "9001:9001"
+    networks:
+      - task-list-network
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+    depends_on:
+      - eureka-server
+  cloud-config-server:
+    image: cerberus/mmv2-cloud-config-server:0.0.1-SNAPSHOT
+    ports:
+      - "8888:8888"
+    networks:
+      - task-list-network
 networks:
   task-list-network:

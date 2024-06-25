@@ -75,6 +75,6 @@ public interface FeignProxy {
     @PostMapping("/v1/tasklist-api/quotes/{id}/update")
     void updateQuote(@PathVariable("id") int id, @RequestBody QuoteDto quoteDto);
 
-    @DeleteMapping("/v1/api/quotes/{id}/delete")
+    @DeleteMapping("/v1/tasklist-api/quotes/{id}/delete")
     void deleteQuote(@PathVariable("id") int id);
 }

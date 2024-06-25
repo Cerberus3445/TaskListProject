@@ -5,33 +5,43 @@ import org.springframework.stereotype.Component;
 @Component
 public class ErrorHandling {
 
-    public String handleTaskException(TaskException taskException){
-        String string = taskException.getMessage();
-        string = string.replace("title", "Название");
-        string = string.replace("expirationDate", "Дата истечения срока");
-        string = string.replace("description", "Описание");
-        string = removeEverythingUnnecessary(string);
-        return string;
-    }
+    public String handleUserAndTaskException(Exception e){
+        String[] array = e.getMessage().split(" ");
 
-    public String handleUserException(UserException userException){
-        String string = userException.getMessage();
-        string = string.replace("name", "Имя");
-        string = string.replace("email", "Email");
-        string = string.replace("password", "Паролт");
-        string = removeEverythingUnnecessary(string);
-        return string;
-    }
+        int position = 0;
+        for(int i = 0; i < array.length; i++){
+            if(array[i].equals("-")){
+                position = i + 1;
+            }
+        }
 
-    private String removeEverythingUnnecessary(String string){
-        string = string.replace("[", "");
-        string = string.replace("]", "");
-        string = string.replace("\"", "");
-        string = string.replace("400", "");
-        string = string.replace("{", "");
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = position; i < array.length; i++){
+            stringBuilder.append(array[i]);
+            stringBuilder.append(" ");
+        }
+        String string = stringBuilder.toString().replace("]", "");
         string = string.replace("}", "");
-        string = string.replace("message", "");
-        string = string.replace(":", "");
+        string = string.replace("\"","");
+        return string;
+    }
+
+    public String handleQuoteException(QuoteException e){
+        String[] array = e.getMessage().split(" ");
+
+        int position = 0;
+        for(int i = 0; i < array.length; i++){
+            if(array[i].equals("")){
+                position = i + 1;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = position; i < array.length; i++){
+            stringBuilder.append(array[i]);
+            stringBuilder.append(" ");
+        }
+        String string = stringBuilder.toString().replace("]", "");
         return string;
     }
 }

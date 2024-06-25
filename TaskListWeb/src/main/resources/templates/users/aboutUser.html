@@ -16,6 +16,10 @@
 
     <a th:href="@{/web/user/aboutUser/tasks}">Список задач</a>
 
+    <div th:if="${admin}">
+        <a href="/admin/main">Страница админа</a>
+    </div>
+
     <form th:method="DELETE" th:action="@{/web/user/{id}(id=${user.getId()})}">
         <input type="submit" value="Delete account">
     </form>

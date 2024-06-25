@@ -78,7 +78,7 @@ public class TaskController {
             taskDto.setExpirationDate(taskRestClient.formatStringToLocalDataTime(taskDto.getExpirationDateString()));
             taskRestClient.updateTask(getUserId(),taskId, taskDto);
         } catch (TaskException taskException){
-            model.addAttribute("error", errorHandling.handleTaskException(taskException));
+            model.addAttribute("error", errorHandling.handleUserAndTaskException(taskException));
             return "task/updateTask";
         } catch (NumberFormatException e){
             model.addAttribute("error", "Формат даты некорректен. Правильный формат: 2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты");
@@ -93,7 +93,7 @@ public class TaskController {
            taskDto.setExpirationDate(taskRestClient.formatStringToLocalDataTime(taskDto.getExpirationDateString()));
            taskRestClient.createTask(getUserId(), taskDto);
        } catch (TaskException taskException){
-            model.addAttribute("error", errorHandling.handleTaskException(taskException));
+            model.addAttribute("error", errorHandling.handleUserAndTaskException(taskException));
             return "task/createTask";
         } catch (NumberFormatException e){
            model.addAttribute("error", "Формат даты некорректен. Правильный формат: 2024-06-30 16:30. Где сначала идёт год, месяц, дата, часы, минуты");

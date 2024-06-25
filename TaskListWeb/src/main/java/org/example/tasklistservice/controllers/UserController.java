@@ -23,7 +23,11 @@ public class UserController {
     @GetMapping("/aboutUser")
     public String getUser(Model model){
         try {
-            model.addAttribute("user", userRestClient.getUser(getUserId()));
+            User user = userRestClient.getUser(getUserId());
+            model.addAttribute("user", user);
+            if(user.getRole().equals("ROLE_ADMIN")){
+                model.addAttribute("admin", "");
+            }
         } catch (Exception e){
             return "errors/404";
         }
@@ -42,9 +46,14 @@ public class UserController {
     }
 
     @PostMapping("/aboutUser/updatePassword")
-    public String updatePassword(@ModelAttribute("password") String password){
+    public String updatePassword(@ModelAttribute("password") String password, Model model){
         System.out.println(password);
-        userRestClient.updatePassword(getUserId(), password);
+        try {
+            userRestClient.updatePassword(getUserId(), password);
+        } catch (UserException userException){
+            model.addAttribute("error",  errorHandling.handleUserAndTaskException(userException));
+            return "users/updatePassword";
+        }
         return "redirect:/web/user/aboutUser";
     }
 
@@ -53,7 +62,7 @@ public class UserController {
         try {
             userRestClient.updateUser(user, id);
         } catch (UserException userException){
-            model.addAttribute("error",  errorHandling.handleUserException(userException));
+            model.addAttribute("error",  errorHandling.handleUserAndTaskException(userException));
             return "users/update";
         }
         return "redirect:/web/user/aboutUser";

@@ -1,11 +1,9 @@
 package org.example.tasklistservice.client;
 import feign.FeignException;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.example.tasklistservice.domain.user.User;
 import org.example.tasklistservice.dto.PasswordDto;
 import org.example.tasklistservice.dto.UserDto;
-import org.example.tasklistservice.exception.ServerException;
 import org.example.tasklistservice.exception.UserException;
 import org.example.tasklistservice.proxy.FeignProxy;
 import org.modelmapper.ModelMapper;
@@ -95,6 +93,6 @@ public class UserRestClient {
     }
 
     private void hardcodedResponse(Exception ex){
-        throw new ServerException();
+        throw new UserException("Сервер не отвечает");
     }
 }

@@ -8,9 +8,7 @@
 </head>
 <body>
 <div class="quote_update">
-    <div th:list="${error}">
-        <h1 style="color: red" th:text="${error}"></h1>
-    </div>
+    <h1 style="color: red" th:text="${errors}"></h1>
 
     <h1 style="color: gray">Обновить цитату</h1>
     <form th:method="POST" th:action="@{/admin/main/{id}/update(id=${quote.getId()})}" th:object="${quote}">

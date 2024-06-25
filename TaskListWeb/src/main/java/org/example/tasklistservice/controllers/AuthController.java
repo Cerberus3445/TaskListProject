@@ -34,7 +34,7 @@ public class AuthController {
             userRestClient.createUser(user);
             return "auth/login";
         } catch (UserException userException){
-            model.addAttribute("errors", errorHandling.handleUserException(userException));
+            model.addAttribute("errors", errorHandling.handleUserAndTaskException(userException));
             return "auth/registration";
         }
     }
